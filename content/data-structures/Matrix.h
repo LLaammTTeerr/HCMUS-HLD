@@ -1,40 +1,83 @@
 /**
- * Author: Ulf Lundstrom
- * Date: 2009-08-03
+ * Author: Phan Binh Nguyen Lam
+ * Date: 2024-11-07
  * License: CC0
- * Source: My head
- * Description: Basic operations on square matrices.
- * Usage: Matrix<int, 3> A;
- *  A.d = {{{{1,2,3}}, {{4,5,6}}, {{7,8,9}}}};
- *  vector<int> vec = {1,2,3};
- *  vec = (A^N) * vec;
- * Status: tested
+ * Description: Basic operations on 2D Matrix
+ * Usage: Matrix<T> a(n, m), b(n, m); a += b; a *= b; a -= b; a + b; a - b; a * b;
+ * 	create unit Matrix using Matrix<T> a(n, m, true);
+ *  swap T for the desired type
  */
 #pragma once
 
-template<class T, int N> struct Matrix {
-	typedef Matrix M;
-	array<array<T, N>, N> d{};
-	M operator*(const M& m) const {
-		M a;
-		rep(i,0,N) rep(j,0,N)
-			rep(k,0,N) a.d[i][j] += d[i][k]*m.d[k][j];
-		return a;
+template <class T>
+struct Matrix {
+	int n, m;
+	vector <vector <T>> self;
+
+	Matrix(int _n = 0, int _m = 0, bool unit = false) : n(_n), m(_m) {
+		self.assign(n, vector <T> (m + 1, 0));
+		if (unit)
+			for (int i = 0; i < n; i++) for (int j = 0; j < m; j++)
+				self[i][j] = i == j;
 	}
-	vector<T> operator*(const vector<T>& vec) const {
-		vector<T> ret(N);
-		rep(i,0,N) rep(j,0,N) ret[i] += d[i][j] * vec[j];
-		return ret;
+
+	Matrix(const vector <vector <T>>& value) {
+		n = value.size();
+		m = n ? value.begin()->size() : 0;
+		self = value;
 	}
-	M operator^(ll p) const {
-		assert(p >= 0);
-		M a, b(*this);
-		rep(i,0,N) a.d[i][i] = 1;
-		while (p) {
-			if (p&1) a = a*b;
-			b = b*b;
-			p >>= 1;
-		}
-		return a;
+
+	Matrix(initializer_list <initializer_list <T>> value) {
+		n = value.size();
+		m = n ? value.begin()->size() : 0;
+		self.reserve(n);
+		self.insert(self.end(), value.begin(), value.end());
+	}
+
+	auto& operator [] (int i) { assert(i < n); return self[i]; }
+	const auto& operator [] (int i) const { assert(i < n); return self[i]; }
+
+	Matrix operator + (const Matrix& other) const {
+		assert(n == other.n and m == other.m);
+		Matrix ans(n, m);
+		for (int i = 0; i < n; i++) for (int j = 0; j < m; j++)
+			ans[i][j] = (*this)[i][j] + other[i][j];
+		return ans;
+	}
+
+	Matrix operator - (const Matrix& other) const {
+		assert(n == other.n and m == other.m);
+		Matrix ans(n, m);
+		for (int i = 0; i < n; i++) for (int j = 0; j < m; j++)
+			ans[i][j] = (*this)[i][j] - other[i][j];
+		return ans;
+	}
+
+	Matrix operator - (void) const {
+		Matrix ans(n, m);
+		for (int i = 0; i < n; i++) for (int j = 0; j < m; j++)
+			ans[i][j] = -(*this)[i][j];
+		return ans;
+	}
+
+	Matrix operator * (const Matrix& other) const {
+		assert(m == other.n);
+		Matrix ans(n, other.m);
+		for (int i = 0; i < n; i++) for (int j = 0; j < other.m; j++) for (int k = 0; k < m; k++)
+			ans[i][j] += (*this)[i][k] * other[k][j];
+		return ans;
+	}
+
+	inline Matrix& operator += (const Matrix& other) { return *this = (*this) + other; }
+	inline Matrix& operator -= (const Matrix& other) { return *this = (*this) - other; }
+	inline Matrix& operator *= (const Matrix& other) { return *this = (*this) * other; }
+	inline bool operator == (const Matrix& other) const { return self == other.self; }
+	inline bool operator != (const Matrix& other) const { return not (self == other.self); }
+
+	template <class U>
+	friend ostream& operator << (ostream& cout, const Matrix <U>& lhs) {
+		for (int i = 0; i < lhs.n; i++) for (int j = 0; j < lhs.m; j++)
+			cout << lhs[i][j] << " \n"[j + 1 == lhs.m];
+		return cout;
 	}
 };

@@ -1,30 +1,108 @@
 /**
- * Author: Lukas Polacek
- * Date: 2009-09-28
+ * Author: Phan Binh Nguyen Lam
+ * Date: 2024-11-07
  * License: CC0
- * Source: folklore
- * Description: Operators for modular arithmetic. You need to set {\tt mod} to
- * some number first and then you can use the structure.
+ * Description: Operators for modular arithmetic.
+ * Usage:
+ *  using Z = Mint<MOD>;
+ *  Z inverse = CInv<42, MOD>;
  */
 #pragma once
 
-#include "euclid.h"
+using i64 = long long;
 
-const ll mod = 17; // change to something else
-struct Mod {
-	ll x;
-	Mod(ll xx) : x(xx) {}
-	Mod operator+(Mod b) { return Mod((x + b.x) % mod); }
-	Mod operator-(Mod b) { return Mod((x - b.x + mod) % mod); }
-	Mod operator*(Mod b) { return Mod((x * b.x) % mod); }
-	Mod operator/(Mod b) { return *this * invert(b); }
-	Mod invert(Mod a) {
-		ll x, y, g = euclid(a.x, mod, x, y);
-		assert(g == 1); return Mod((x + mod) % mod);
+template<class T>
+constexpr T power(T a, i64 b) {
+	T res = 1;
+	for (; b; b /= 2, a *= a) {
+		if (b % 2) {
+			res *= a;
+		}
 	}
-	Mod operator^(ll e) {
-		if (!e) return Mod(1);
-		Mod r = *this ^ (e / 2); r = r * r;
-		return e&1 ? *this * r : r;
+	return res;
+}
+
+template<int P>
+struct MInt {
+	int x;
+	constexpr MInt() : x{} {}
+	constexpr MInt(i64 x) : x{norm(x % P)} {}
+	
+	constexpr int norm(int x) const {
+		if (x < 0) {
+			x += P;
+		}
+		if (x >= P) {
+			x -= P;
+		}
+		return x;
+	}
+	constexpr int val() const {
+		return x;
+	}
+	explicit constexpr operator int() const {
+		return x;
+	}
+	constexpr MInt operator-() const {
+		MInt res;
+		res.x = norm(P - x);
+		return res;
+	}
+	constexpr MInt inv() const {
+		assert(x != 0);
+		return power(*this, P - 2);
+	}
+	constexpr MInt &operator*=(MInt rhs) {
+		x = 1LL * x * rhs.x % P;
+		return *this;
+	}
+	constexpr MInt &operator+=(MInt rhs) {
+		x = norm(x + rhs.x);
+		return *this;
+	}
+	constexpr MInt &operator-=(MInt rhs) {
+		x = norm(x - rhs.x);
+		return *this;
+	}
+	constexpr MInt &operator/=(MInt rhs) {
+		return *this *= rhs.inv();
+	}
+	friend constexpr MInt operator*(MInt lhs, MInt rhs) {
+		MInt res = lhs;
+		res *= rhs;
+		return res;
+	}
+	friend constexpr MInt operator+(MInt lhs, MInt rhs) {
+		MInt res = lhs;
+		res += rhs;
+		return res;
+	}
+	friend constexpr MInt operator-(MInt lhs, MInt rhs) {
+		MInt res = lhs;
+		res -= rhs;
+		return res;
+	}
+	friend constexpr MInt operator/(MInt lhs, MInt rhs) {
+		MInt res = lhs;
+		res /= rhs;
+		return res;
+	}
+	friend constexpr std::istream &operator>>(std::istream &is, MInt &a) {
+		i64 v;
+		is >> v;
+		a = MInt(v);
+		return is;
+	}
+	friend constexpr std::ostream &operator<<(std::ostream &os, const MInt &a) {
+		return os << a.val();
+	}
+	friend constexpr bool operator==(MInt lhs, MInt rhs) {
+		return lhs.val() == rhs.val();
+	}
+	friend constexpr bool operator!=(MInt lhs, MInt rhs) {
+		return lhs.val() != rhs.val();
 	}
 };
+
+template<int V, int P>
+constexpr MInt<P> CInv = MInt<P>(V).inv();
