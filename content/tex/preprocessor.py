@@ -49,6 +49,8 @@ def ordoescape(input, esc=True):
 def addref(caption, outstream):
     caption = pathescape(caption).strip()
     print(r"\kactlref{%s}" % caption, file=outstream)
+    print(r"\section*{}");
+    print(r"\addcontentsline{toc}{section}{%s}" % caption + "\n", file=outstream)
     with open('header.tmp', 'a') as f:
         f.write(caption + "\n")
 
@@ -139,8 +141,6 @@ def processwithcomments(caption, instream, outstream, listingslang):
             if command not in knowncommands:
                 error = error + "Unknown command: " + command + ". "
             commands[command] = value.lstrip()
-    for rcommand in sorted(set(requiredcommands) - set(commands)):
-        error = error + "Missing command: " + rcommand + ". "
     if end>=0:
         nsource = nsource.rstrip() + source[end:]
     nsource = nsource.strip()

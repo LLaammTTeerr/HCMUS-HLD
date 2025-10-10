@@ -21,7 +21,7 @@ fast: | build
 	$(LATEXCMD) content/hcmus.tex </dev/null
 	cp build/hcmus.pdf hcmus.pdf
 
-hcmus: test-session.pdf | build
+hcmus: build
 	$(LATEXCMD) content/hcmus.tex && $(LATEXCMD) content/hcmus.tex
 	cp build/hcmus.pdf hcmus.pdf
 
