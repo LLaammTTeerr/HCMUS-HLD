@@ -19,7 +19,7 @@ struct DinicFlow {
         point.push_back(u); capa.push_back(c2); flow.push_back(0); next.push_back(head[v]); head[v] = numEdge++;
         return ret;
     }
- 
+
     bool bfs(int s, int t) {
         queue<int> q;
         for (int i = 1; i <= numNode; i++) dist[i] = -1;
