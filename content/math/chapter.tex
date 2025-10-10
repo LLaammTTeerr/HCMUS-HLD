@@ -172,9 +172,30 @@ A Markov chain is an A-chain if the states can be partitioned into two sets $\ma
 The probability for absorption in state $i\in\mathbf{A}$, when the initial state is $j$, is $a_{ij} = p_{ij}+\sum_{k\in\mathbf{G}} a_{ik}p_{kj}$.
 The expected time until absorption, when the initial state is $i$, is $t_i = 1+\sum_{k\in\mathbf{G}}p_{ki}t_k$.
 
+\section{Bézout's identity}
+For $a \neq $, $b \neq 0$, then $d=gcd(a,b)$ is the smallest positive integer for which there are integer solutions to
+$$ax+by=d$$
+If $(x,y)$ is one solution, then all solutions are given by
+$$\left(x+\frac{kb}{\gcd(a,b)}, y-\frac{ka}{\gcd(a,b)}\right), \quad k\in\mathbb{Z}$$
+
+\section{Mobius Function}
+\[
+	\mu(n) = \begin{cases} 0 & n \textrm{ is not square free}\\ 1 & n \textrm{ has even number of prime factors}\\ -1 & n \textrm{ has odd number of prime factors}\\\end{cases}
+\]
+  Mobius Inversion:
+  \[ g(n) = \sum_{d|n} f(d) \Leftrightarrow f(n) = \sum_{d|n} \mu(d)g(n/d) \]
+  Other useful formulas/forms:
+
+  $ \sum_{d | n} \mu(d) = [ n = 1] $ (very useful)
+
+  $ g(n) = \sum_{n|d} f(d) \Leftrightarrow f(n) = \sum_{n|d} \mu(d/n)g(d)$
+
+ $ g(n) = \sum_{1 \leq m \leq n} f(\left\lfloor\frac{n}{m}\right \rfloor ) \Leftrightarrow f(n) = \sum_{1\leq m\leq n} \mu(m)g(\left\lfloor\frac{n}{m}\right\rfloor)$
+
 \kactlimport{InverseModulo.h}
 \kactlimport{PolyInterpolate.h}
 \kactlimport{BerlekampMassey.h}
 \kactlimport{LinearRecurrence.h}
 \kactlimport{GaussianElimination.h}
 \kactlimport{ModInt.h}
+\kactlimport{Lagrange.h}
