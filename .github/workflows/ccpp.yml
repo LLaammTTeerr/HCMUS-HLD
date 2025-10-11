@@ -11,17 +11,14 @@ jobs:
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    container:
+      image: texlive/texlive:latest
 
     steps:
       # Checkout code
       - uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-
-      # Install LaTeX packages
-      - name: Install pdflatex
-        run: sudo apt-get update && sudo apt-get install -y \
-             texlive-full
 
       # Build PDF
       - name: Build PDF
