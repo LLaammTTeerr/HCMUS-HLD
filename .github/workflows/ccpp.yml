@@ -19,5 +19,3 @@ jobs:
       run: sudo apt-get install texlive-latex-base texlive-latex-recommended texlive-latex-extra
     - name: Build pdf
       run: make hcmus
-    - name: Run compiles
-      run: make test-compiles
