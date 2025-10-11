@@ -9,15 +9,35 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    container:
+      image: texlive/texlive:latest
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Install pdflatex
-      run: sudo apt-get install texlive-latex-base texlive-latex-recommended texlive-latex-extra
-    - name: Build pdf
-      run: make hcmus
-    - name: Run compiles
-      run: make test-compiles
+      # Checkout code
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      # Build PDF
+      - name: Build PDF
+        run: make hcmus
+
+      # Configure Git for commits
+      - name: Configure Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      # Commit & Push changes (if any)
+      - name: Commit and Push changes
+        run: |
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          git add .
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+            exit 0
+          fi
+          git commit -m "Recompile PDF [skip ci]"
+          git push origin HEAD:${{ github.ref }}
