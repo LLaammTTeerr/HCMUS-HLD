@@ -21,7 +21,7 @@ jobs:
       # Install LaTeX packages
       - name: Install pdflatex
         run: sudo apt-get update && sudo apt-get install -y \
-             texlive-latex-base texlive-latex-recommended texlive-latex-extra
+             texlive-latex-full
 
       # Build PDF
       - name: Build PDF
