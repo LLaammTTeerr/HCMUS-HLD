@@ -1,5 +1,6 @@
 /**
- * Time: O(N / 9) to +/- or (* / div / mod) a bignum with an int64_t number
+ * Time: 
+ *  O(N / 9) to +/- or (* / div / mod) a bignum with an int64_t number
  *  O(N / 9) to comparing 2 bignums or toString
  *  O((N / 9)^2) to * for 2 bignums
  */
