@@ -1,6 +1,6 @@
 /**
  * Description: Dynamic Convex Hull find Min
- * Usage: For doubles, use inf = 1/.0, div(a,b) = a/b
+ * Usage: For doubles, use inf $=$ $1/.0$, div(a,b) $=$ $a/b$
  */
 
 #pragma once

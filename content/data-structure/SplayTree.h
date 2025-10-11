@@ -1,6 +1,6 @@
 /**
- * Usage: can split into k parts and then reverse/get sum these parts
- * Time: O(log N) average
+ * Usage: can split into k parts and then reverse $/$ get sum these parts
+ * Time: $O(log N)$ average
 */
 #pragma once
 

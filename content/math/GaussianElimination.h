@@ -7,7 +7,7 @@
  *  gauss({{1, 2, 3}, {4, 5, 6}}); // returns {1, -2}
  *  can be use for modulo arithmetic, but be careful with division
  *  replace Z with the desired type
- * Time: O(N^3)
+ * Time: $O(N^3)$
  */
 #pragma once
 

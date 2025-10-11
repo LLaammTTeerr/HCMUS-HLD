@@ -1,5 +1,5 @@
 /**
- * Time O(N \log^2(N))
+ * Time: $O(N \log^2(N))$
 */
 
 #pragma once

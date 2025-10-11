@@ -1,5 +1,5 @@
 /**
- * Time O(N)
+ * Time: $O(N)$
 */
 
 #pragma once

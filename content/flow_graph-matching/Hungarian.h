@@ -1,5 +1,5 @@
 /**
- * Time O(N^3)
+ * Time: $O(N^3)$
 */
 
 #pragma once

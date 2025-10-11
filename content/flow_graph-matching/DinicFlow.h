@@ -1,6 +1,6 @@
 /**
- * Time O(V^2 * E) for general case
- * Time O(E * \sqrt(E)) for unit network
+ * Time: $O(V^2 * E)$ for general case
+ *  $O(E * \sqrt(E))$ for unit network
 */ 
 #pragma once
 
