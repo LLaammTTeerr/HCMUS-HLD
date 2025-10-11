@@ -1,3 +1,4 @@
+#pragma once
 vector<pair<int, int>> parent;
 vector<int> rank, bipartite;
 
