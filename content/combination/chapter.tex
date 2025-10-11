@@ -64,6 +64,26 @@
 		$$E(n,0) = E(n,n-1) = 1$$
 		$$E(n,k) = \sum_{j=0}^k(-1)^j\binom{n+1}{j}(k+1-j)^n$$
 
+	\subsection{Motzkin numbers}
+		\begin{itemize}
+		    \item different ways of drawing non-intersecting chords between n points on a circle.
+		    \item \textbf{positive} integer sequences of length $n + 1$ in which the opening and ending elements are 1, and the difference between any two consecutive elements is -1, 0 or 1.
+		    \item $1, 1, 2, 4, 9, 21, 51, 127, 323, 835, ...$
+		\end{itemize}
+		\begin{align*}
+		    M_n = M_{n-1} + \sum_{i=0}^{n-2} M_i M_{n-2-i} = \frac{2n+1}{n+2} M_{n-1} + \frac{3n-3}{n+2} M_{n-2}
+		\end{align*}
+
+	\subsection{Delannoy numbers}
+		\begin{itemize}
+		    \item Number of ways to move from (0,0) to (m,n) with 3 kinds of steps: (1,0), (1,1), (0,1)
+		    \item $D(0, k) = 1, 1, 1, 1, ...$
+		    \item $D(3, k) = 1, 7, 25, 63, ...$
+		\end{itemize}
+		\begin{align*}
+		    D(m,n) = \sum_{k=0}^{\min(m,n)} \binom{m+n-k}{m} \binom{m}{k} = \sum_{k=0}^{\min(m,n)} \binom{m}{k} \binom{n}{k} 2^k
+		\end{align*}
+
 	\subsection{Stirling numbers of the second kind}
 		Partitions of $n$ distinct elements into exactly $k$ groups.
 		$$S(n,k) = S(n-1,k-1) + k S(n-1,k)$$
@@ -71,9 +91,14 @@
 		$$S(n,k) = \frac{1}{k!}\sum_{j=0}^k (-1)^{k-j}\binom{k}{j}j^n$$
 
 	\subsection{Bell numbers}
-		Total number of partitions of $n$ distinct elements. $B(n) =$
+		Number of partitions of a set of $n$ items into non-empty disjoint subsets. $B(n) =$
 		$1, 1, 2, 5, 15, 52, 203, 877, 4140, 21147, \dots$. For $p$ prime,
 		\[ B(p^m+n)\equiv mB(n)+B(n+1) \pmod{p} \]
+		\begin{align*}
+		    B_{n+1} = \sum_{k=0}^{n} \binom{n}{k} B_k\\
+		    B_{p+n} \equiv B_n + B_{n+1} \pmod{p}\\
+		    B_{p^m+n} \equiv mB_n + B_{n+1} \pmod{p}
+		\end{align*}
 
 	\subsection{Labeled unrooted trees}
 		\# on $n$ vertices: $n^{n-2}$ \\
@@ -87,8 +112,11 @@
 		\begin{itemize}[noitemsep]
 			\item sub-diagonal monotone paths in an $n\times n$ grid.
 			\item strings with $n$ pairs of parenthesis, correctly nested.
-			\item binary trees with with $n+1$ leaves (0 or 2 children).
+			\item full binary trees with with $n+1$ leaves (0 or 2 children).
 			\item ordered trees with $n+1$ vertices.
 			\item ways a convex polygon with $n+2$ sides can be cut into triangles by connecting vertices with straight lines.
 			\item permutations of $[n]$ with no 3-term increasing subseq.
+			\item correct bracket sequence of length $2n$.
 		\end{itemize}
+
+\kactlimport{partition_numbers.h}
