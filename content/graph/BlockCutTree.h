@@ -1,3 +1,5 @@
+#pragma once
+
 void tarjan(int u) {
     low[u] = num[u] = ++num[0];
     for (int it = 0; it < int(adj[u].size()); ++it) {

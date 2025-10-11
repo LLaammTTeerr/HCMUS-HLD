@@ -1,3 +1,8 @@
+/**
+ * Time: O(N / 9) to +/- or (* / div / mod) a bignum with an int64_t number
+ * O(N / 9) to comparing 2 bignums or toString
+ * O((N / 9)^2) to * for 2 bignums
+ */
 #pragma once
 
 struct Bignum {
@@ -8,20 +13,15 @@ struct Bignum {
     Bignum(ll x = 0) {
         numDigit = 0;
         memset(digits, 0, sizeof digits);
-
-        if (!x) numDigit = 1;
-
-        while (x > 0) {
-            digits[numDigit++] = x % BASE;
-            x /= BASE;
-        }
+        if(!x) numDigit = 1;
+        while(x > 0) digits[numDigit++] = x % BASE, x /= BASE;
     }
 
     Bignum(string s) {
         numDigit = 0;
         memset(digits, 0, sizeof digits);
-
-        ll x(0); int i(s.length() - 1), l(i + 1);
+        ll x(0);
+        int i(s.length() - 1), l(i + 1);
         for (int i = l - 1; i >= 8; i -= 9) digits[numDigit++] = stoll(s.substr(i - 8, 9));
         if(l % 9) digits[numDigit++] = stoll(s.substr(0, l % 9));
     }
@@ -31,63 +31,59 @@ struct Bignum {
         numDigit = max(numDigit, x.numDigit);
         for (int i = 0; i < numDigit; ++i) {
             digits[i] += x.digits[i] + carry;
-            if (digits[i] >= BASE) {
-                digits[i] -= BASE; carry = 1;
-            } else { carry = 0; }
+            if(digits[i] >= BASE) { digits[i] -= BASE, carry = 1; } 
+            else carry = 0;
         }
-        if (carry) digits[numDigit++] = carry;
-        return (*this);
+        if(carry) digits[numDigit++] = carry;
+        return *this;
     }
 
     Bignum operator + (const Bignum &x) const {
-        Bignum res(*this); return (res += x);
+        Bignum res(*this);
+        return res += x;
     }
 
     Bignum& operator -= (const Bignum &x) {
         int carry(0);
         for (int i = 0; i < numDigit; ++i) {
             digits[i] -= x.digits[i] + carry;
-            if (digits[i] < 0) {
-                digits[i] += BASE; carry = 1;
-            } else { carry = 0; }
+            if(digits[i] < 0) { digits[i] += BASE, carry = 1; } 
+            else carry = 0;
         }
         while(numDigit > 1 && !digits[numDigit - 1]) --numDigit;
-        return (*this);
+        return *this;
     }
 
     Bignum operator - (const Bignum &x) const {
-        Bignum res(*this); return (res -= x);
+        Bignum res(*this); res -= x;
+        return res;
     }
 
     Bignum& operator *= (int x) {
-        if (!x) {
-            *this = Bignum(0); return *this;
-        }
+        if (!x) { *this = Bignum(0); return *this; }
         ll remain = 0;
         for (int i = 0; i < numDigit; ++i) {
             remain += 1LL * digits[i] * x;
-            digits[i] = remain % BASE;
-            remain /= BASE;
+            digits[i] = remain % BASE, remain /= BASE;
         }
-        while (remain > 0) {
-            digits[numDigit++] = remain % BASE; remain /= BASE;
-        }
-        return (*this);
+        while(remain > 0) digits[numDigit++] = remain % BASE, remain /= BASE;
+        return *this;
     }
 
     Bignum operator * (int x) const {
-        Bignum res(*this); return (res *= x);
+        Bignum res(*this); res *= x;
+        return res;
     }
 
     Bignum operator * (const Bignum &x) const {
         Bignum res(0);
         for (int i = 0; i < numDigit; ++i) {
-            if (digits[i] > 0)
-                for (int j = 0; j < x.numDigit; ++j) {
+            if (!digits[i]) continue;
+            for (int j = 0; j < x.numDigit; ++j) {
                 if(x.digits[j] > 0) {
                     ll tmp = 1LL * digits[i] * x.digits[j];
                     int pos(i + j);
-                    while (tmp > 0) {
+                    while(tmp > 0) {
                         tmp += res.digits[pos];
                         res.digits[pos] = tmp % BASE;
                         tmp /= BASE, ++pos;
@@ -96,14 +92,13 @@ struct Bignum {
             }
         }
         res.numDigit = MAX_DIGIT - 1;
-        while(res.numDigit > 1 && !res.digits[res.numDigit - 1]) --res.numDigit;
-
-        return (res);
+        while (res.numDigit > 1 && !res.digits[res.numDigit - 1]) --res.numDigit;
+        return res;
     }
 
     ll operator % (ll x) const {
 		ll res(0);
-		for (int i = numDigit - 1; i >= 0; --i) res = (res * BASE + digits[i]) % x;
+		for (int i = numDigit - 1; i >= 0; i--) res = (res * BASE + digits[i]) % x;
 		return res;
 	}
 
@@ -115,16 +110,15 @@ struct Bignum {
 			rem = (BASE * rem + digits[i]) % x;
 		}
 		res.numDigit = numDigit;
-		while(res.numDigit > 1 && !res.digits[res.numDigit - 1]) --res.numDigit;
-		return (res);
+		while (res.numDigit > 1 && !res.digits[res.numDigit - 1]) --res.numDigit;
+		return res;
 	}
 
     #define COMPARE(a, b) (((a) > (b)) - ((a) < (b)))
     int compare(const Bignum &x) const {
-        if (numDigit != x.numDigit)
-            return COMPARE(numDigit, x.numDigit);
+        if (numDigit != x.numDigit) return COMPARE(numDigit, x.numDigit);
         for (int i = numDigit - 1; i >= 0; --i)
-            if (digits[i] != x.digits[i]) return COMPARE(digits[i], x.digits[i]);
+            if(digits[i] != x.digits[i]) return COMPARE(digits[i], x.digits[i]);
         return 0;
     }
 
@@ -136,14 +130,10 @@ struct Bignum {
         string res;
         for (int i = 0; i < numDigit; ++i) {
             int tmp = digits[i];
-            for (int j = 0; j < 9; ++j) {
-                res.push_back('0' + tmp % 10);
-                tmp /= 10;
-            }
+            for (int j = 0; j < 9; ++j) { res.push_back('0' + tmp % 10); tmp /= 10; }
         }
-        while(res.size() > 1 && res.back() == '0')
-            res.pop_back();
+        while (sz(res) > 1 && res.back() == '0') res.pop_back();
         reverse(res.begin(), res.end());
-        return (res);
+        return res;
     }
 };
