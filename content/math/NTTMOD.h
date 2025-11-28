@@ -2,15 +2,7 @@
 
 const int G = 3; // primitive root for MOD 998244353
 
-ll mod_pow(ll a, ll e, ll M = MOD) {
-    ll r = 1;
-    while(e > 0) {
-        if(e & 1) r = r * a % M;
-        a = a * a % M;
-        e >>= 1;
-    }
-    return r;
-}
+ll mod_pow(ll a, ll e, ll M = MOD) // calc a^e % M in O(log)
 
 void ntt(vector<ll>& a, bool invert) {
     int n = sz(a);
