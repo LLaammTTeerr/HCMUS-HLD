@@ -90,11 +90,49 @@ Integration by parts:
 \end{align*}
 
 \section{Series}
-$$e^x = 1+x+\frac{x^2}{2!}+\frac{x^3}{3!}+\dots,\,(-\infty<x<\infty)$$
-$$\ln(1+x) = x-\frac{x^2}{2}+\frac{x^3}{3}-\frac{x^4}{4}+\dots,\,(-1<x\leq1)$$
-$$\sin x = x-\frac{x^3}{3!}+\frac{x^5}{5!}-\frac{x^7}{7!}+\dots,\,(-\infty<x<\infty)$$
-$$\cos x = 1-\frac{x^2}{2!}+\frac{x^4}{4!}-\frac{x^6}{6!}+\dots,\,(-\infty<x<\infty)$$
-$$(1+x)^k = \sum_{n=0}^{\infty} \binom{k}{n} x^n = 1 + kx + \frac{k(k-1)}{2!}x^2 + \frac{k(k-1)(k-2)}{3!}x^3 + \dots,\,(-1<x<1)$$
+For a function \(f(x)\) that is infinitely differentiable at a point \(a\),
+the Taylor series centered at \(a\) is
+
+\[
+f(x) = \sum_{n=0}^\infty 
+       \frac{f^{(n)}(a)}{n!}(x-a)^n.
+\]
+
+Setting \(a = 0\), we obtain the Maclaurin series:
+
+\[
+f(x) = \sum_{n=0}^{\infty} 
+       \frac{f^{(n)}(0)}{n!} x^n.
+\]
+
+\[
+e^{x} = \sum_{n=0}^{\infty} \frac{x^n}{n!}.
+\]
+
+For \(|x| < 1\),
+\[
+\ln(1+x) = \sum_{n=1}^{\infty} 
+           (-1)^{n-1} \frac{x^n}{n}.
+\]\[
+\sin x = \sum_{n=0}^{\infty} (-1)^n 
+         \frac{x^{2n+1}}{(2n+1)!}.
+\]
+\[
+\cos x = \sum_{n=0}^{\infty} (-1)^n 
+         \frac{x^{2n}}{(2n)!}.
+\]
+
+\[
+(1+x)^k 
+= \sum_{n=0}^{\infty} \binom{k}{n} x^n, 
+\qquad |x| < 1
+\]
+
+\[
+\binom{k}{n} 
+= \frac{k(k-1)(k-2)\cdots(k-n+1)}{n!}
+= \frac{(k)_n}{n!}.
+\]
 
 \section{Probability theory}
 Let $X$ be a discrete random variable with probability $p_X(x)$ of assuming the value $x$. It will then have an expected value (mean) $\mu=\mathbb{E}(X)=\sum_xxp_X(x)$ and variance $\sigma^2=V(X)=\mathbb{E}(X^2)-(\mathbb{E}(X))^2=\sum_x(x-\mathbb{E}(X))^2p_X(x)$ where $\sigma$ is the standard deviation. If $X$ is instead continuous it will have a probability density function $f_X(x)$ and the sums above will instead be integrals with $p_X(x)$ replaced by $f_X(x)$.
