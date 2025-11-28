@@ -1,6 +1,7 @@
 #pragma once
 
 namespace RabinKarp {
+    using vector<vector<char>> vvc;
     const int NMOD = 3;
     
     const int MOD[] = {(int) 1e9 + 2277, (int) 1e9 + 5277, (int) 1e9 + 8277, (int) 1e9 + 9277};
@@ -8,70 +9,15 @@ namespace RabinKarp {
     
     ll pw[NMOD][MAXN];
     
-    struct Hash {
-        ll value[NMOD];
-    
-        Hash(char c = 0) {
-            for (int i = 0; i < NMOD; ++i) value[i] = c;
-        }
-    
-        Hash operator + (const Hash &x) const {
-            Hash res;
-            for (int j = 0; j < NMOD; ++j) {
-                res.value[j] = value[j] + x.value[j];
-                if(res.value[j] >= MOD[j]) res.value[j] -= MOD[j];
-            }
-            return res;
-        }
-    
-        Hash operator - (const Hash &x) const {
-            Hash res;
-            for (int j = 0; j < NMOD; ++j) {
-                res.value[j] = value[j] - x.value[j];
-                if(res.value[j] < 0) res.value[j] += MOD[j];
-            }
-            return res;
-        }
-    
-        Hash operator * (int k) const {
-            Hash res;
-            for (int j = 0; j < NMOD; ++j) res.value[j] = value[j] * pw[j][k] % MOD[j];
-            return res;
-        }
-    
-        Hash operator * (Hash h) const {
-            Hash res;
-            for (int j = 0; j < NMOD; ++j) res.value[j] = 1LL * value[j] * h.value[j] % MOD[j];
-            return res;
-        }
-    
-        bool operator == (const Hash &x) const {
-            for (int j = 0; j < NMOD; ++j) if(value[j] != x.value[j]) return false;
-            return true;
-        }
-    
-    } hashVal[MAXN];
-    
-    void prepare() {
-        for (int j = 0; j < NMOD; ++j) {
-            pw[j][0] = 1;
-            for (int i = 1; i < MAXN; ++i) pw[j][i] = pw[j][i - 1] * BASE % MOD[j];
-        }
-    }
+    struct Hash hashVal[MAXN]; // check in Hash.h
     
     Hash dr = 1, dc = 1; // Highest power for row/col hashing
     
     // Checks if all values of pattern matches with the text
-    bool check(vector<vector<char>> &txt, vector<vector<char>> &pat, int r, int c) {
-        /*for (int i = 0; i < pat.size(); ++i) {
-            for (int j = 0; j < pat[0].size(); ++j)
-                if(pat[i][j] != txt[i + r][j + c]) return false;
-        }*/
-        return true;
-    }
+    bool check(const vvc &txt, const vvc &pat, int r, int c) { return true; }
     
     // Finds the first hash of first n rows where n is no. of rows in pattern
-    vector<Hash> findHash(vector<vector<char>> &mat, int row) {
+    vector<Hash> findHash(const vvc &mat, int row) {
         vector<Hash> hash;
         int col = mat[0].size();
         for (int i = 0; i < col; ++i) {
@@ -82,13 +28,12 @@ namespace RabinKarp {
         return hash;
     }
     
-    //rolling hash function for columns
-    void colRollingHash(vector<vector<char>> &txt, vector<Hash> &t_hash, int row, int p_row) {
-        for (int i = 0; i < sz(t_hash); ++i)
-            t_hash[i] = (t_hash[i] - Hash(txt[row][i]) * dr) * 1 + Hash(txt[row + p_row][i]);
+    // rolling hash function for columns
+    void colRollingHash(const vvc &txt, vector<Hash> &t_hash, int row, int p_row) {
+        for (int i = 0; i < sz(t_hash); ++i) t_hash[i] = (t_hash[i] - Hash(txt[row][i]) * dr) * 1 + Hash(txt[row + p_row][i]);
     }
 
-    int solve(vector<vector<char>> &txt, vector<vector<char>> &pat) {
+    int solve(const vvc &txt, const vvc &pat) {
         int t_row = sz(txt), t_col = sz(txt[0]);
         int p_row = sz(pat), p_col = sz(pat[0]);
         dr = Hash(1) * (p_row - 1);

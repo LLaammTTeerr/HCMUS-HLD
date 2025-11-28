@@ -90,26 +90,17 @@ class SuffixArray {
 
         void buildLCP(void) {
             for (int i = 1; i <= n; ++i) pos[sa[i]] = i;
-            int k = 0;
-            lcp[n] = 0;
+            int k = 0; lcp[n] = 0;
             for (int i = 1; i <= n; ++i) if(pos[i] < n) {
                 for (int j = sa[pos[i] + 1]; s[i + k - 1] == s[j + k - 1]; ) ++k;
                 lcp[pos[i]] = k; k -= (k > 0);
             }
         }
 
-        void show(void) {
-            for (int i = 1; i <= n; ++i) cout << sa[i] << ' '; cout << '\n';
-            for (int i = 1; i <= n; ++i) cout << pos[i] << ' '; cout << '\n';
-            for (int i = 1; i <= n; ++i) cout << lcp[i] << ' '; cout << '\n';
-        }
-
         SuffixArray() : n(0), sa(NULL), lcp(NULL), pos(NULL), s(NULL) {}
         
         SuffixArray(string ss) : n(sz(ss)) {
-            sa = new int[n + 7];
-            lcp = new int[n + 7];
-            pos = new int[n + 7];
+            sa = new int[n + 7], lcp = new int[n + 7], pos = new int[n + 7];
             s = (unc*) ss.c_str();
             buildSA(s, sa, n + 1, 256, sizeof(char));
             for (int i = 1; i <= n; ++i) ++sa[i];

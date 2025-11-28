@@ -2,19 +2,9 @@
 
 inline ll C2(ll n) { return (n & 1) ? (n + 1) / 2 % MOD * (n % MOD) % MOD : n / 2 % MOD * ((n + 1) % MOD) % MOD; }
 
-inline ll nCk(int n, int k) {
-    return (k > n) ? 0 : frac[n] * finv[k] % MOD * finv[n - k] % MOD;
-}
+inline ll nCk(int n, int k) { return (k > n) ? 0 : frac[n] * finv[k] % MOD * finv[n - k] % MOD; }
 
-ll powermod(ll a, int exponent) {
-    ll res(1);
-    while(exponent > 0) {
-        if(exponent & 1) res = res * a % MOD;
-        exponent >>= 1;
-        a = a * a % MOD;
-    }
-    return res;
-}
+ll powermod(ll a, int expo); // calc a^expo % MOD in O(log)
 
 ll tmp[MAXN];
 ll bernoulli(int n) {

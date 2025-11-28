@@ -4,10 +4,9 @@
 
 namespace SuffixArray {
     int cnt[MAXN], tmp[MAXN], gap;
-    bool sufCmp(int u, int v) {
-        if(pos[u] != pos[v]) return pos[u] < pos[v];
-        return (max(u, v) + gap <= strLen) ? pos[u + gap] < pos[v + gap] : u > v;
-    }
+    
+    bool sufCmp(int u, int v) // check SuffixArray.h
+    void buildLCP(void) // check SuffixArray.h
     
     void countsort(int k) {
         for (int i = 0; i <= max(256, strLen); ++i) cnt[i] = 0;
@@ -15,16 +14,6 @@ namespace SuffixArray {
         for (int i = 1; i <= max(256, strLen); ++i) cnt[i] += cnt[i - 1];
         for (int i = strLen; i > 0; --i) tmp[cnt[(sa[i] + k <= strLen ? pos[sa[i] + k] : 0)]--] = sa[i];
         for (int i = 1; i <= strLen; ++i) sa[i] = tmp[i];
-    }
-    
-    void buildLCP(void) {
-        int k(0);
-        for (int i = 1; i <= strLen; ++i) {
-            if(pos[i] < strLen) {
-                for (int j = sa[pos[i] + 1]; str[i + k] == str[j + k]; ) ++k;
-                lcp[pos[i]] = k, k -= (k > 0);
-            }
-        }
     }
     
     void buildSA(void) {

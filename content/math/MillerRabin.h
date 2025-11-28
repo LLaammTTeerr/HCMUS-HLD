@@ -48,26 +48,9 @@ inline pli factor(ll n) {
     return make_pair(n / (1LL << s), s);
 }
 
-ll mulmod(ll a, ll expo, ll MOD) {
-    ll res = 0;
-    while(expo > 0) {
-        if(expo & 1) if((res += a) >= MOD) res -= MOD;
-        if((a += a) >= MOD) a -= MOD;
-        expo >>= 1;
-    }
-    return res;
-}
+ll mulmod(ll a, ll b, ll MOD); // calc a * b % MOD in O(log) with MOD ~ 1e18
 
-ll powermod(ll a, ll expo, ll MOD) {
-    ll res = 1;
-    while(expo > 0) {
-        if(expo & 1) res = mulmod(res, a, MOD);
-        a = mulmod(a, a, MOD);
-        expo >>= 1;
-    }
-
-    return res;
-}
+ll powermod(ll a, ll expo, ll MOD); // calc a^expo % MOD in O(log)
 
 bool test_a(ll s, ll d, ll n, ll a) {
     if(n == a) return true;
