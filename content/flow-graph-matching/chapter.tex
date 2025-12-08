@@ -31,9 +31,9 @@ Problem: "You are planning to build housing on a street. There are n spots avail
  
 Solution: 
 
-- Let's reformulate the restrictions. For a restriction $(l_i, r_i, c_i, x_i)$ We can assume that we will get punished for all of them and that we will get our $c_i$ dollars back if all of our buildings in the range $[l_i,r_i]$ are smaller than or equal to $x_i$. With this small modification, we can now only gain money.
+$-$ Let's reformulate the restrictions. For a restriction $(l_i, r_i, c_i, x_i)$ We can assume that we will get punished for all of them and that we will get our $c_i$ dollars back if all of our buildings in the range $[l_i,r_i]$ are smaller than or equal to $x_i$. With this small modification, we can now only gain money.
 
-- Let the maximal height be $H$. Let's say that originally all buildings start at height $H$ and there are multiple projects to reduce them. For example, the project $(i, h)$ represents reducing the $i$-th from height $h$ to $h−1$ for the cost $h^2 − (h−1)^2$. The project $(i, h)$ is clearly dependent on the project $(i, h + 1)$. Let's also add our restrictions as projects. A restriction $(l_i, r_i, c_i, x_i)$ is equivalent to a project with profit $c_i$ dependent on the projects $(l_i, x_i)$, $(l_i+1,x_i)$ … $(r_i,x_i)$. In less formal terms, this means that we can regain our money if we reduce the $l_i$-th, $l_i+1$-th … $r_i$-th buildings to height $h_i$.
+$-$ Let the maximal height be $H$. Let's say that originally all buildings start at height $H$ and there are multiple projects to reduce them. For example, the project $(i, h)$ represents reducing the $i$-th from height $h$ to $h−1$ for the cost $h^2 - (h-1)^2$. The project $(i, h)$ is clearly dependent on the project $(i, h + 1)$. Let's also add our restrictions as projects. A restriction $(l_i, r_i, c_i, x_i)$ is equivalent to a project with profit $c_i$ dependent on the projects $(l_i, x_i)$, $(l_i+1,x_i)$ … $(r_i,x_i)$. In less formal terms, this means that we can regain our money if we reduce the $l_i$-th, $l_i+1$-th … $r_i$-th buildings to height $h_i$.
 
 
 \subsection{Minimum Path cover in DAG}
@@ -41,11 +41,11 @@ Problem: Given a DAG, cover all vertices with minimum number of vertex-disjoint 
 
 Solution: 
 
-- Split each vertex into Left and Right copy.
+$-$ Split each vertex into Left and Right copy.
 
-- Edge $u -> v$ becomes bipartite edge $u_L$ -> $v_R$ $(cap = 1)$.
+$-$ Edge $u - v$ becomes bipartite edge $u_L$ $-$ $v_R$ $(cap = 1)$.
 
-- Maximum matching size $M$ gives answer: $|V| - M$.
+$-$ Maximum matching size $M$ gives answer: $|V| - M$.
 
 \subsection{Maximum Weight Independent Set in a Bipartite graph}
 Problem: Given an bipartite graph with weighted nodes. Find an independent set with maximum weight.
