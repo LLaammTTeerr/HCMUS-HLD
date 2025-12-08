@@ -1,13 +1,81 @@
 \chapter{Flow - Graph Matching}
 
-\section{Some Popular Flow Problems}
-
-\subsection{Hall's Marriage Theorem}
+\section{Hall's Marriage Theorem}
 Description: Hall's marriage theorem is a fundamental result in combinatorics that provides a necessary and sufficient condition for a perfect matching to exist in a bipartite graph, or equivalently, for a transversal to exist for a collection of sets, often explained through matchmaking scenarios (e.g., can every girl find a compatible boy?). The core condition (Hall's Condition) states that for any subset of vertices (say, "girls") in one partition, the size of their combined neighbors (the "boys" they know) must be at least as large as the size of the subset itself. 
 
 Theorem: A bipartite graph $G=(G \cup B,E)$ has a matching that covers $G$ if and only if Hall's Condition holds: for every subset $S \subseteq G$, $|N(S)| \geq |S|$
 
+\section{Project Selection Problem}
+Problem: "You are given a set of $N$ projects and $M$ machines. The $i$-th machine costs $q_i$. The i-th project yields $p_i$ revenue. Each project requires a set of machines. If multiple projects require the same machine, they can share the same one. Choose a set of machines to buy and projects to complete such that the sum of the revenues minus the sum of the costs is maximized."
 
+Solution: One simple way to model the above problem as a minimum cut is to create a graph with $N + M + 2$ vertices. Each vertex represents the source, the sink, a project or a machine. We will note the source as $S$, the sink as $T$, the $i$-th project as $P_i$ and the $i$-th machine as $M_i$. Then, add edges of weight $p_i$ between the source and the $i$-th project, edges of weight $q_i$ between the $i$-th machine and the sink, and edges of weight $+\inf$ between each project and each of its required machines.
+
+Answer: (Sum of all $P_i$) - (answer when we call max flow on the above graph).
+
+\subsection{The Closure Problem}
+Problem: "You are given a directed graph. Each node has a certain weight. We define a closure as a set nodes such that there exists no edge that is directed from inside the closure to outside it. Find the closure with the maximal sum of weights."
+
+Solution: This problem and Project Selection Problem are closely related, equivalent even. We model the above problem as a minimum cut is to create a graph with N + 2 vertices. Each vertex represents the source, the sink or a node. First we sparse the node set into 2 part, the first part is all nodes with positive weight called as set $P$, the second part is all nodes with negative weight called as set $N$. We will note the source as $S$, the sink as $T$, the $i$-th positive node as $P_i$ and the $i$-th negative node as $N_i$. Then, add edges of weight $w_{P_i}$ between the source and the $i$-th positive node $(P_i)$, edges of weight $w_{N_i}$ between the $i$-th negative node $(N_i)$ and the sink. And edges of weight $+\inf$ between each pair of directed edges.
+
+Answer: (Sum of all $w_{P_i}$) - (answer when we call max flow on the above graph).
+
+\subsection{A more abstract problem as Project Selection Problem}
+Problem: "You are given a graph with weighted nodes and weighted edges. Select a valid subset of nodes and edges with maximal weight. A subset is considered to be valid if for each included edge, both of its endpoints are also included in the subset"
+
+Solution: We can consider the nodes as 'machines' and the edges as projects. Now, it is easy to see an edge being dependent on its 2 endpoints is equivalent to a project being dependent on 2 machines.
+
+\subsection{An even more abstract example as Project Selection Problem}
+Problem: "You are planning to build housing on a street. There are n spots available on the street on which you can build a house. The spots are labeled from $1$ to $N$ from left to right. In each spot, you can build a house with an integer height between $0$ and $H$. In each spot, if a house has height $a$, you can gain $a^2$ dollars from it. The city has $M$ zoning restrictions though. The $i$-th restriction says that if the tallest house from spots $l_i$ to $r_i$ is strictly more than $x_i$, you must pay a fine of $c_i$. You would like to build houses to maximize your profit (sum of dollars gained minus fines). Determine the maximum profit possible."
+ 
+Solution: 
+
+$-$ Let's reformulate the restrictions. For a restriction $(l_i, r_i, c_i, x_i)$ We can assume that we will get punished for all of them and that we will get our $c_i$ dollars back if all of our buildings in the range $[l_i,r_i]$ are smaller than or equal to $x_i$. With this small modification, we can now only gain money.
+
+$-$ Let the maximal height be $H$. Let's say that originally all buildings start at height $H$ and there are multiple projects to reduce them. For example, the project $(i, h)$ represents reducing the $i$-th from height $h$ to $h-1$ for the cost $h^2 - (h-1)^2$. The project $(i, h)$ is clearly dependent on the project $(i, h + 1)$. Let's also add our restrictions as projects. A restriction $(l_i, r_i, c_i, x_i)$ is equivalent to a project with profit $c_i$ dependent on the projects $(l_i, x_i)$, $(l_i+1,x_i)$ … $(r_i,x_i)$. In less formal terms, this means that we can regain our money if we reduce the $l_i$-th, $l_i+1$-th … $r_i$-th buildings to height $h_i$.
+
+
+\section{Minimum Path cover in DAG}
+Problem: Given a DAG, cover all vertices with minimum number of vertex-disjoint paths.
+
+Solution: 
+
+$-$ Split each vertex into Left and Right copy.
+
+$-$ Edge $u - v$ becomes bipartite edge $u_L$ $-$ $v_R$ $(cap = 1)$.
+
+$-$ Maximum matching size $M$ gives answer: $|V| - M$.
+
+\section{Maximum Weight Independent Set in a Bipartite graph}
+Problem: Given an bipartite graph with weighted nodes. Find an independent set with maximum weight.
+
+Solution:
+
+$-$ Convert to minimum weight vertex cover (MWVC).
+$-$ Edge $(S - left)$ $(cap = weight_{left})$
+$-$ Edge $(right - T)$ $(cap = weight{right})$
+$-$ For every edge $(left - right)$ build edge $left - right$ $(cap = +\inf)$
+$-$ Min-cut $=$ MWVC, then MWIS $=$ \text{total\_weight} $-$ MWVC.
+
+\section{Maximum flow with flow in range $[L, R]$}
+Solution:
+
+$-$ Let $S$ and $T$ be the Source and the Sink of graph
+
+$-$ Let $Sp$ and $Tp$ be $2$ new node (special Source and special Sink node for maintain flow in range)
+
+$-$ Add an edge from $T$ to $S$ with $cap = +\inf$
+
+$-$ For each edge $u - v$ with flow in range $[L, R]$, we build edge:
+
+$+$ $(u - v)$ with $cap = R - L$
+
+$+$ $(u - Tp)$ with $cap = L$
+
+$+$ $(Sp - v)$ with $cap = L$
+    
+$-$ Then we call max flow from $Sp$ to $Tp$. if (max flow from $Sp$ to $Tp$) $<$ (sum of all $L$ of edge) then $L-R$ flow doesn't exist.
+
+$-$ If not, the answer is max flow from $S$ to $T$.
 
 \kactlimport{DinicFlow.h}
 \kactlimport{MaxFlowMinCost.h}
