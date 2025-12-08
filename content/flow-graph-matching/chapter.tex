@@ -11,11 +11,6 @@
     Solution: One simple way to model the above problem as a minimum cut is to create a graph with $N + M + 2$ vertices. Each vertex represents the source, the sink, a project or a machine. We will note the source as $S$, the sink as $T$, the $i$-th project as $P_i$ and the $i$-th machine as $M_i$. Then, add edges of weight $p_i$ between the source and the $i$-th project, edges of weight $q_i$ between the $i$-th machine and the sink, and edges of weight $+\inf$ between each project and each of its required machines.
 
     Answer: (Sum of all $P_i$) - (answer when we call max flow on the above graph).
-
-
-
-
-
     
 \subsection{The Closure Problem}
     Problem: "You are given a directed graph. Each node has a certain weight. We define a closure as a set nodes such that there exists no edge that is directed from inside the closure to outside it. Find the closure with the maximal sum of weights."
