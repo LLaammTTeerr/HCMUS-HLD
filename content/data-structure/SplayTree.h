@@ -79,11 +79,4 @@ namespace SplayTree {
         splay(A), setChild(A, B, 1), update(A);
         return A;
     }
-    
-    void preOrder(const int &id) {
-        if(!id) return;
-        preOrder(node[id].L);
-        cout << id << ' ';
-        preOrder(node[id].R);
-    }
 }
