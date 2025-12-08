@@ -1,52 +1,62 @@
-/** Hall's Marriage Theorem
- * Description: Hall's marriage theorem is a fundamental result in combinatorics that provides a necessary and sufficient condition for a perfect matching 
+/** 
+ * Hall's Marriage Theorem
+ 
+ * Description - Hall's marriage theorem is a fundamental result in combinatorics that provides a necessary and sufficient condition for a perfect matching 
  to exist in a bipartite graph, or equivalently, for a transversal to exist for a collection of sets, often explained through matchmaking scenarios 
  (e.g., can every girl find a compatible boy?). The core condition (Hall's Condition) states that for any subset of vertices (say, "girls") in one partition, 
  the size of their combined neighbors (the "boys" they know) must be at least as large as the size of the subset itself. 
  
- * Theorem: A bipartite graph $G=(G \cup B,E)$ has a matching that covers $G$ if and only if Hall's Condition holds: for every subset $S \subseteq G$, $|N(S)| \geq |S|$
+ * Hall's Marriage Theorem - A bipartite graph $G=(G \cup B,E)$ has a matching that covers $G$ if and only if Hall's Condition holds: for every subset $S \subseteq G$, $|N(S)| \geq |S|$
 */
 
-/** Project Selection Problem 
- * Problem: "You are given a set of N projects and M machines. The i-th machine costs q(i). The i-th project yields p(i) revenue. Each project requires a set of machines. 
+/** 
+ * Project Selection Problem 
+ 
+ * Problem - "You are given a set of N projects and M machines. The i-th machine costs q(i). The i-th project yields p(i) revenue. Each project requires a set of machines. 
  If multiple projects require the same machine, they can share the same one. Choose a set of machines to buy and projects to complete such that the sum of the revenues 
  minus the sum of the costs is maximized."
 
- * Solution: One simple way to model the above problem as a minimum cut is to create a graph with N + M + 2 vertices. Each vertex represents the source, the sink, a project or a machine. 
+ * Solution - One simple way to model the above problem as a minimum cut is to create a graph with N + M + 2 vertices. Each vertex represents the source, the sink, a project or a machine. 
  We will note the source as S, the sink as T, the i-th project as P(i) and the i-th machine as M(i). Then, add edges of weight p(i) between the source and the i-th project, 
  edges of weight q(i) between the i-th machine and the sink, and edges of weight +oo between each project and each of its required machines.
 
- * Answer: (Sum of all P(i) ) - (answer when we call max flow on the above graph).
+ * Answer - (Sum of all P(i) ) - (answer when we call max flow on the above graph).
 */
 
-/** The Closure Problem
- * Problem: "You are given a directed graph. Each node has a certain weight. We define a closure as a set nodes such that there exists no edge that is directed from inside 
+/** 
+ * The Closure Problem
+ 
+ * Problem - "You are given a directed graph. Each node has a certain weight. We define a closure as a set nodes such that there exists no edge that is directed from inside 
  the closure to outside it. Find the closure with the maximal sum of weights."
 
- * Solution: This problem and Project Selection Problem are closely related, equivalent even. We model the above problem as a minimum cut is to create a graph with N + 2 vertices.
+ * Solution - This problem and Project Selection Problem are closely related, equivalent even. We model the above problem as a minimum cut is to create a graph with N + 2 vertices.
  Each vertex represents the source, the sink or a node. First we sparse the node set into 2 part, the first part is all nodes with positive weight called as set P, 
  the second part is all nodes with negative weight called as set N. We will note the source as S, the sink as T, the i-th positive node as P(i) and the i-th negative node as N(i).
  Then, add edges of weight w(P(i)) between the source and the i-th positive node (P(i)), edges of weight w(N(i)) between the i-th negative node (N(i)) and the sink. And edges of
  weight +oo between each pair of directed edges.
 
- * Answer: (Sum of all w(P(i))) - (answer when we call max flow on the above graph).
+ * Answer - (Sum of all w(P(i))) - (answer when we call max flow on the above graph).
 */
 
-/** A more abstract problem as Project Selection Problem
- * Problem: "You are given a graph with weighted nodes and weighted edges. Select a valid subset of nodes and edges with maximal weight. A subset is considered to be valid 
+/** 
+ * A more abstract problem as Project Selection Problem
+ 
+ * Problem - "You are given a graph with weighted nodes and weighted edges. Select a valid subset of nodes and edges with maximal weight. A subset is considered to be valid 
  if for each included edge, both of its endpoints are also included in the subset"
 
- * Solution: We can consider the nodes as 'machines' and the edges as projects. Now, it is easy to see an edge being dependent on its 2 endpoints is equivalent to a project 
+ * Solution - We can consider the nodes as 'machines' and the edges as projects. Now, it is easy to see an edge being dependent on its 2 endpoints is equivalent to a project 
  being dependent on 2 machines.
 */
 
-/** An even more abstract example as Project Selection Problem
- * Problem: "You are planning to build housing on a street. There are n spots available on the street on which you can build a house. The spots are labeled from 1 to N 
+/** 
+ * An even more abstract example as Project Selection Problem
+ 
+ * Problem - "You are planning to build housing on a street. There are n spots available on the street on which you can build a house. The spots are labeled from 1 to N 
  from left to right. In each spot, you can build a house with an integer height between 0 and H. In each spot, if a house has height a, you can gain a^2 dollars from it.
  The city has M zoning restrictions though. The i-th restriction says that if the tallest house from spots l(i) to r(i) is strictly more than x(i), you must pay a fine of c(i).
  You would like to build houses to maximize your profit (sum of dollars gained minus fines). Determine the maximum profit possible."
  
- * Solution: Let's reformulate the restrictions. For a restriction (l(i),r(i),x(i),c(i)) We can assume that we will get punished for all of them and that we will get our c(i)
+ * Solution - Let's reformulate the restrictions. For a restriction (l(i),r(i),x(i),c(i)) We can assume that we will get punished for all of them and that we will get our c(i)
  dollars back if all of our buildings in the range [l(i),r(i)] are smaller than or equal to x(i). With this small modification, we can now only gain money.
 
  Let the maximal height be H. Let's say that originally all buildings start at height H and there are multiple projects to reduce them. For example, the project (i, h)
@@ -55,19 +65,23 @@
  In less formal terms, this means that we can regain our money if we reduce the l(i)-th, l(i)+1-th … r(i)-th buildings to height h(i).
 */
 
-/** Minimum Path cover in DAG
- * Problem: Given a DAG, cover all vertices with minimum number of vertex-disjoint paths.
+/** 
+ * Minimum Path cover in DAG
+ 
+ * Problem - Given a DAG, cover all vertices with minimum number of vertex-disjoint paths.
 
- * Solution:
+ * Solution - 
     - Split each vertex into Left and Right copy.
     - Edge u -> v becomes bipartite edge u_L -> v_R (cap = 1).
     - Maximum matching size M gives answer: |V| - M.
 */
 
-/** Maximum Weight Independent Set in a Bipartite graph
- * Problem: Given an bipartite graph with weighted nodes. Find an independent set with maximum weight.
+/** 
+ * Maximum Weight Independent Set in a Bipartite graph
+ 
+ * Problem - Given an bipartite graph with weighted nodes. Find an independent set with maximum weight.
 
- * Solution:
+ * Solution - 
     - Convert to minimum weight vertex cover (MWVC).
     - S -> left (cap = weight(left))
     - right -> T (cap = weight(right))
@@ -75,8 +89,10 @@
     - Min-cut = MWVC, then MWIS = total_weight - MWVC.
 */
 
-/** Maximum flow with flow in range [L, R]
- * Solution:
+/** 
+ * Maximum flow with flow in range [L, R]
+ 
+ * Solution - 
     - Let S and T be the Source and the Sink of graph
     - Let Sp and Tp be 2 new node (special Source and special Sink node for maintain flow in range)
     - Add an edge from T to S with cap = +oo
