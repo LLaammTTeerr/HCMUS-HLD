@@ -29,57 +29,64 @@
     
     Solution: 
 
-    $-$ Let's reformulate the restrictions. For a restriction $(l_i, r_i, c_i, x_i)$ We can assume that we will get punished for all of them and that we will get our $c_i$ dollars back if all of our buildings in the range $[l_i,r_i]$ are smaller than or equal to $x_i$. With this small modification, we can now only gain money.
+    \begin{itemize}
+        \item Let's reformulate the restrictions. For a restriction $(l_i, r_i, c_i, x_i)$ We can assume that we will get punished for all of them and that we will get our $c_i$ dollars back if all of our buildings in the range $[l_i,r_i]$ are smaller than or equal to $x_i$. With this small modification, we can now only gain money.
 
-    $-$ Let the maximal height be $H$. Let's say that originally all buildings start at height $H$ and there are multiple projects to reduce them. For example, the project $(i, h)$ represents reducing the $i$-th from height $h$ to $h-1$ for the cost $h^2 - (h-1)^2$. The project $(i, h)$ is clearly dependent on the project $(i, h + 1)$. Let's also add our restrictions as projects. A restriction $(l_i, r_i, c_i, x_i)$ is equivalent to a project with profit $c_i$ dependent on the projects $(l_i, x_i)$, $(l_i+1,x_i)$ … $(r_i,x_i)$. In less formal terms, this means that we can regain our money if we reduce the $l_i$-th, $l_i+1$-th … $r_i$-th buildings to height $h_i$.
-
+        \item Let the maximal height be $H$. Let's say that originally all buildings start at height $H$ and there are multiple projects to reduce them. For example, the project $(i, h)$ represents reducing the $i$-th from height $h$ to $h-1$ for the cost $h^2 - (h-1)^2$. The project $(i, h)$ is clearly dependent on the project $(i, h + 1)$. Let's also add our restrictions as projects. A restriction $(l_i, r_i, c_i, x_i)$ is equivalent to a project with profit $c_i$ dependent on the projects $(l_i, x_i)$, $(l_i+1,x_i)$ … $(r_i,x_i)$. In less formal terms, this means that we can regain our money if we reduce the $l_i$-th, $l_i+1$-th … $r_i$-th buildings to height $h_i$.
+    \end{itemize}
 
 \section{Minimum Path cover in DAG}
     Problem: Given a DAG, cover all vertices with minimum number of vertex-disjoint paths.
 
     Solution: 
 
-    $-$ Split each vertex into Left and Right copy.
+    \begin{itemize}
+        \item Split each vertex into Left and Right copy.
 
-    $-$ Edge $u - v$ becomes bipartite edge $u_L$ $-$ $v_R$ $(cap = 1)$.
+        \item Edge $u - v$ becomes bipartite edge $u_L$ $-$ $v_R$ $(cap = 1)$.
 
-    $-$ Maximum matching size $M$ gives answer: $|V| - M$.
+        \item Maximum matching size $M$ gives answer: $|V| - M$.
+    \end{itemize}
 
 \section{Maximum Weight Independent Set in a Bipartite graph}
     Problem: Given an bipartite graph with weighted nodes. Find an independent set with maximum weight.
 
     Solution:
 
-    $-$ Convert to minimum weight vertex cover (MWVC).
+    \begin{itemize}
+        \item Convert to minimum weight vertex cover (MWVC).
 
-    $-$ Edge $(S - left)$ $(cap = weight_{left})$
+        \item Edge $(S - left)$ $(cap = weight_{left})$
 
-    $-$ Edge $(right - T)$ $(cap = weight{right})$
+        \item Edge $(right - T)$ $(cap = weight{right})$
 
-    $-$ For every edge $(left - right)$ build edge $left - right$ $(cap = +\inf)$
+        \item For every edge $(left - right)$ build edge $left - right$ $(cap = +\inf)$
 
-    $-$ Min-cut $=$ MWVC, then MWIS $=$ \text{total\_weight} $-$ MWVC.
+        \item Min-cut $=$ MWVC, then MWIS $=$ \text{total\_weight} $-$ MWVC.
+    \end{itemize}
 
 \section{Maximum flow, flow in range $[L, R]$}
     Solution:
+    
+    \begin{itemize}
+        \item Let $S$ and $T$ be the Source and the Sink of graph
 
-    $-$ Let $S$ and $T$ be the Source and the Sink of graph
+        \item Let $Sp$ and $Tp$ be $2$ new node (special Source and special Sink node for maintain flow in range)
 
-    $-$ Let $Sp$ and $Tp$ be $2$ new node (special Source and special Sink node for maintain flow in range)
+        \item Add an edge from $T$ to $S$ with $cap = +\inf$
 
-    $-$ Add an edge from $T$ to $S$ with $cap = +\inf$
+        \item For each edge $u - v$ with flow in range $[L, R]$, we build edge:
 
-    $-$ For each edge $u - v$ with flow in range $[L, R]$, we build edge:
+        \item $(u - v)$ with $cap = R - L$
 
-        $+$ $(u - v)$ with $cap = R - L$
+        \item $(u - Tp)$ with $cap = L$
 
-        $+$ $(u - Tp)$ with $cap = L$
+        \item $(Sp - v)$ with $cap = L$
+            
+        \item Then we call max flow from $Sp$ to $Tp$. if (max flow from $Sp$ to $Tp$) $<$ (sum of all $L$ of edge) then $L-R$ flow doesn't exist.
 
-        $+$ $(Sp - v)$ with $cap = L$
-        
-    $-$ Then we call max flow from $Sp$ to $Tp$. if (max flow from $Sp$ to $Tp$) $<$ (sum of all $L$ of edge) then $L-R$ flow doesn't exist.
-
-    $-$ If not, the answer is max flow from $S$ to $T$.
+        \item If not, the answer is max flow from $S$ to $T$.
+    \end{itemize}
 
 \kactlimport{DinicFlow.h}
 \kactlimport{MaxFlowMinCost.h}
