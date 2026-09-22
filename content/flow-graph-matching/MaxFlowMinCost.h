@@ -1,3 +1,7 @@
+/**
+ * Time: $O(F x VE)$, F is number of augment paths.
+*/
+
 #pragma once
 
 class MaxFlowMinCost {
@@ -53,10 +57,8 @@ class MaxFlowMinCost {
             int totFlow(0), totCost(0);
             while(FordBellman(s, t)) {
                 int delta(1e9+7);
-                for (int u = t; u != s; u = E[tr[u]].from)
-                    delta = min(delta, E[tr[u]].residual());
-                for (int u = t; u != s; u = E[tr[u]].from)
-                    E[tr[u]].flow += delta, E[tr[u] ^ 1].flow -= delta;
+                for (int u = t; u != s; u = E[tr[u]].from) delta = min(delta, E[tr[u]].residual());
+                for (int u = t; u != s; u = E[tr[u]].from) E[tr[u]].flow += delta, E[tr[u] ^ 1].flow -= delta;
                 totFlow += delta, totCost += delta * dist[t];
             }
             return ii(totFlow, totCost);

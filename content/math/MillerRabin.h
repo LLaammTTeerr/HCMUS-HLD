@@ -1,22 +1,10 @@
 /** 
- * Usage: 
- *  n $<$ $2,047$: 
+ * Usage: For n <= 2^32 and n <= 2^64, there exists in template
+ *  n $<$ $2,047$ (~ 2^11):
  *  a $=$ $[2]$
  *  
- *  n $<$ $1,373,653$: 
- *  a $=$ $[2, 3]$
- *  
- *  n $<$ $9,081,191$:
+ *  n $<$ $9,081,191$ (~ 2^23):
  *  a $=$ $[31, 73]$
- * 
- *  n $<$ $25,326,001$:
- *  a = $[2, 3, 5]$
- * 
- *  n $<$ $3,215,031,751$:
- *  a $=$ $[2, 3, 5, 7]$
- * 
- *  n $<$ $4,759,123,141$:
- *  a $=$ $[2, 7, 61]$
  * 
  *  n $<$ $1,122,004,669,633$:
  *  a $=$ $[2, 13, 23, 1662803]$
@@ -27,15 +15,6 @@
  *  n $<$ $3,474,749,660,383$:
  *  a $=$ $[2, 3, 5, 7, 11, 13]$
  * 
- *  n $<$ $341,550,071,728,321$:
- *  a $=$ $[2, 3, 5, 7, 11, 13, 17]$
- * 
- *  n $<$ $3,825,123,056,546,413,051$:
- *  a $=$ $[2, 3, 5, 7, 11, 13, 17, 19, 23]$
- * 
- *  n $\leq$ $2^64$:
- *  a $=$ $[2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37]$
- * 
  *  n $<$ $318,665,857,834,031,151,167,461$:
  *  a $=$ $[2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37]$
  * 
@@ -45,32 +24,36 @@
 
 #pragma once
 
-inline pli factor(ll n) {
-    int s = __builtin_ctz(n);
-    return make_pair(n / (1LL << s), s);
+inline puli factor(ull n) {
+    int s = __builtin_ctzll(n);
+    return make_pair(n >> s, s);
 }
 
-ll mulmod(ll a, ll b, ll MOD); // calc a * b % MOD in O(log) with MOD ~ 1e18
+ull mulmod(ull a, ull b, ull MOD) { return (__uint128_t) a * b % MOD; }
+ull powermod(ull a, ull expo, ull MOD); // calc a^expo % MOD in O(log)
 
-ll powermod(ll a, ll expo, ll MOD); // calc a^expo % MOD in O(log)
-
-bool test_a(ll s, ll d, ll n, ll a) {
-    if(n == a) return true;
-    ll p = powermod(a, d, n);
+bool check_miller(ull s, ull d, ull n, ull a) {
+    if(a % n == 0) return true;
+    ull p = powermod(a, d, n);
     if(p == 1) return true;
     for (; s > 0; --s) {
         if(p == n - 1) return true;
         p = mulmod(p, p, n);
+        if(p == 1) return false;
     }
     return false;
 }
 
-bool miller(ll n) {
-    if(n < 2) return false;
-    if((n & 1) == 0) return (n == 2);
-    ll d; int s;
+bool isPrime(ull n) {
+    if(n == 2 || n == 3 || n == 5 || n == 7) return true;
+    if(n % 2 == 0 || n % 3 == 0 || n % 5 == 0 || n % 7 == 0) return false;
+    if(n < 121) return (n > 1);
+    ull d; int s;
     tie(d, s) = factor(n - 1);
-    vector<int> test_prime = {2, 3, 7, 11, 13, 17, 19, 23, 29, 31, 37};
-    for (int i = 0; i < sz(test_prime); ++i) if(!test_a(s, d, n, test_prime[i])) return false;
+    if(n < (1LL << 32)) {
+        for (ull a : {2, 7, 61}) if(!check_miller(s, d, n, a)) return false;
+    } else {
+        for (ull a : {2, 325, 9375, 28178, 450775, 9780504, 1795265022}) if(!check_miller(s, d, n, a)) return false;
+    }
     return true;
 }
