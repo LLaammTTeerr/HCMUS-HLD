@@ -1,5 +1,8 @@
 /** 
- * Usage: For n <= 2^32 and n <= 2^64, there exists in template
+ * Usage: Check a number is prime or not
+ *  
+ *  For $n \leq 2^32$ and $n \leq 2^64$, there exists in template
+ *  
  *  n $<$ $2,047$ (~ 2^11):
  *  a $=$ $[2]$
  *  
