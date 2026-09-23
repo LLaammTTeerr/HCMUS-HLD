@@ -1,3 +1,7 @@
+/*
+ * Time: O(\sqrt(\sqrt(N)) \times \log(N)^2)
+*/
+
 #pragma once
 
 ll gcd(ll x, ll y) {

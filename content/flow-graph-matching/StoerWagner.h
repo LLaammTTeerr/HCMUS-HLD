@@ -1,6 +1,8 @@
 /**
  * Usage: global min cut (all source all sink)
-  * Input adjacent matrix w (weighted). Output total weight and vertices list of a part.
+ *  
+ *  Input adjacent matrix w (weighted). Output total weight and vertices list of a part.
+ *
  * Time: $O(V^3)$ 
 */
 

@@ -1,5 +1,5 @@
 /**
- * Time: $O(F x VE)$, F is number of augment paths.
+ * Time: $O(F \times VE)$, F is number of augment paths.
 */
 
 #pragma once

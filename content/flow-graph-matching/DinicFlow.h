@@ -1,6 +1,7 @@
 /**
- * Time: $O(V^2 * E)$ for general case
- *  $O(E * \sqrt(V))$ for unit network or bipartie graph
+ * Time: $O(V^2 \times E)$ for general case
+ *
+ *  $O(E \times \sqrt(V))$ for unit network or bipartie graph
 */ 
 #pragma once
 

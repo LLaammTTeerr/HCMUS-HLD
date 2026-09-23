@@ -1,5 +1,5 @@
 /**
- * Time: $O(N \sqrt(N))$ 
+ * Time: $O(N \times \sqrt(N))$ 
 */
 #pragma once
 
