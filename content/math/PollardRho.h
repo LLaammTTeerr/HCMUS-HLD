@@ -1,5 +1,5 @@
 /*
- * Time: O(\sqrt(\sqrt(N)) \times \log(N)^2)
+ * Time: $O(\sqrt(\sqrt(N)) \times \log(N)^2)$
 */
 
 #pragma once
