@@ -1,140 +1,102 @@
 /**
- * Time: 
- *  $O(N / 9)$ to $+/-$ or ($* /$ div $/$ mod) a bignum with an int64 number
- *  $O(N / 9)$ to comparing 2 bignums or toString
- *  $O((N / 9)^2)$ to $*$ for 2 bignums
+ * Author: HCMUS-HLD
+ * Description: Non-negative big integer, base $10^9$ limbs
+ * (little-endian, no leading zero limbs; 0 is empty). Sections
+ * are independent, delete what the problem doesn't need; only
+ * big / big needs [+-] and [small]. For signs keep a bool beside.
+ * Usage: Big a("123456789012345678901"), b(42);
+ * cout << (a * b + 7).str(); auto [q, r] = a.divmod(b);
+ * Time: +, -, small ops $O(n)$; $\times$ $O(nm)$; big div
+ * $O(nm \log B)$ with $n, m$ = number of limbs. In practice:
+ * $\times$ of two $10^5$-digit numbers 0.2 s; big / fine up to
+ * $\approx 3 \cdot 10^4$ digits (0.75 s).
  */
 #pragma once
 
-struct Bignum {
-	static const int MAX_DIGIT = 1000;
-	static const int BASE = (int) 1e9;
-	int digits[MAX_DIGIT], numDigit;
-
-	Bignum(ll x = 0) {
-		numDigit = 0;
-		memset(digits, 0, sizeof digits);
-		if(!x) numDigit = 1;
-		while(x > 0) digits[numDigit++] = x % BASE, x /= BASE;
-	}
-
-	Bignum(string s) {
-		numDigit = 0;
-		memset(digits, 0, sizeof digits);
-		ll x(0);
-		int i(s.length() - 1), l(i + 1);
-		for (int i = l - 1; i >= 8; i -= 9) digits[numDigit++] = stoll(s.substr(i - 8, 9));
-		if(l % 9) digits[numDigit++] = stoll(s.substr(0, l % 9));
-	}
-
-	Bignum& operator += (const Bignum &x) {
-		int carry(0);
-		numDigit = max(numDigit, x.numDigit);
-		for (int i = 0; i < numDigit; ++i) {
-			digits[i] += x.digits[i] + carry;
-			if(digits[i] >= BASE) { digits[i] -= BASE, carry = 1; } 
-			else carry = 0;
+const ll B = 1e9;
+struct Big {
+	vector<ll> d;
+	// [core]
+	Big(ll x = 0) { for (; x; x /= B) d.push_back(x % B); }
+	Big(const string& s) {
+		for (int i = sz(s); i > 0; i -= 9) {
+			int j = max(0, i - 9);
+			d.push_back(stoll(s.substr(j, i - j)));
 		}
-		if(carry) digits[numDigit++] = carry;
-		return *this;
+		trim();
 	}
-
-	Bignum operator + (const Bignum &x) const {
-		Bignum res(*this);
-		return res += x;
-	}
-
-	Bignum& operator -= (const Bignum &x) {
-		int carry(0);
-		for (int i = 0; i < numDigit; ++i) {
-			digits[i] -= x.digits[i] + carry;
-			if(digits[i] < 0) { digits[i] += BASE, carry = 1; } 
-			else carry = 0;
+	void trim() { while (sz(d) && !d.back()) d.pop_back(); }
+	string str() const {
+		if (d.empty()) return "0";
+		string s = to_string(d.back());
+		for (int i = sz(d) - 1; i--;) {
+			string t = to_string(d[i]);
+			s += string(9 - sz(t), '0') + t;
 		}
-		while(numDigit > 1 && !digits[numDigit - 1]) --numDigit;
-		return *this;
+		return s;
 	}
-
-	Bignum operator - (const Bignum &x) const {
-		Bignum res(*this); res -= x;
-		return res;
+	bool operator<(const Big& o) const {
+		if (sz(d) != sz(o.d)) return sz(d) < sz(o.d);
+		return lexicographical_compare(d.rbegin(), d.rend(),
+			o.d.rbegin(), o.d.rend());
 	}
-
-	Bignum& operator *= (int x) {
-		if (!x) { *this = Bignum(0); return *this; }
-		ll remain = 0;
-		for (int i = 0; i < numDigit; ++i) {
-			remain += 1LL * digits[i] * x;
-			digits[i] = remain % BASE, remain /= BASE;
+	bool operator==(const Big& o) const { return d == o.d; }
+	// [+-] a - b needs a >= b
+	Big operator+(const Big& o) const {
+		Big r; ll c = 0;
+		for (int i = 0; i < max(sz(d), sz(o.d)) || c; i++) {
+			c += (i < sz(d) ? d[i] : 0) + (i < sz(o.d) ? o.d[i] : 0);
+			r.d.push_back(c % B), c /= B;
 		}
-		while(remain > 0) digits[numDigit++] = remain % BASE, remain /= BASE;
-		return *this;
+		return r;
 	}
-
-	Bignum operator * (int x) const {
-		Bignum res(*this); res *= x;
-		return res;
+	Big operator-(const Big& o) const {
+		Big r = *this; ll c = 0;
+		for (int i = 0; i < sz(o.d) || c; i++) {
+			r.d[i] -= c + (i < sz(o.d) ? o.d[i] : 0);
+			if ((c = r.d[i] < 0)) r.d[i] += B;
+		}
+		r.trim(); return r;
 	}
-
-	Bignum operator * (const Bignum &x) const {
-		Bignum res(0);
-		for (int i = 0; i < numDigit; ++i) {
-			if (!digits[i]) continue;
-			for (int j = 0; j < x.numDigit; ++j) {
-				if(x.digits[j] > 0) {
-					ll tmp = 1LL * digits[i] * x.digits[j];
-					int pos(i + j);
-					while(tmp > 0) {
-						tmp += res.digits[pos];
-						res.digits[pos] = tmp % BASE;
-						tmp /= BASE, ++pos;
-					}
-				}
+	// [small] 0 <= m < 9e9
+	Big operator*(ll m) const {
+		Big r; ll c = 0;
+		for (int i = 0; i < sz(d) || c; i++) {
+			c += i < sz(d) ? d[i] * m : 0;
+			r.d.push_back(c % B), c /= B;
+		}
+		r.trim(); return r;
+	}
+	pair<Big, ll> divmod(ll m) const {
+		Big q = *this; ll r = 0;
+		for (int i = sz(d); i--;)
+			r = r * B + d[i], q.d[i] = r / m, r %= m;
+		q.trim(); return {q, r};
+	}
+	// [big *]
+	Big operator*(const Big& o) const {
+		Big r; r.d.assign(sz(d) + sz(o.d) + 1, 0);
+		rep(i,0,sz(d)) {
+			ll c = 0;
+			for (int j = 0; j < sz(o.d) || c; j++) {
+				c += r.d[i+j] + (j < sz(o.d) ? d[i] * o.d[j] : 0);
+				r.d[i+j] = c % B, c /= B;
 			}
 		}
-		res.numDigit = MAX_DIGIT - 1;
-		while (res.numDigit > 1 && !res.digits[res.numDigit - 1]) --res.numDigit;
-		return res;
+		r.trim(); return r;
 	}
-
-	ll operator % (ll x) const {
-		ll res(0);
-		for (int i = numDigit - 1; i >= 0; i--) res = (res * BASE + digits[i]) % x;
-		return res;
-	}
-
-	Bignum operator / (ll x) const {
-		Bignum res(0);
-		ll rem(0);
-		for (int i = numDigit - 1; i >= 0; i--) {
-			res.digits[i] = (BASE * rem + digits[i]) / x;
-			rem = (BASE * rem + digits[i]) % x;
+	// [big /] needs [+-] and [small]; o > 0
+	pair<Big, Big> divmod(const Big& o) const {
+		Big q, r; q.d.resize(sz(d));
+		for (int i = sz(d); i--;) {
+			r.d.insert(r.d.begin(), d[i]), r.trim();
+			ll lo = 0, hi = B - 1; // largest q.d[i]: o*q.d[i] <= r
+			while (lo < hi) {
+				ll m = (lo + hi + 1) / 2;
+				if (r < o * m) hi = m - 1; else lo = m;
+			}
+			q.d[i] = lo, r = r - o * lo;
 		}
-		res.numDigit = numDigit;
-		while (res.numDigit > 1 && !res.digits[res.numDigit - 1]) --res.numDigit;
-		return res;
-	}
-
-	#define COMPARE(a, b) (((a) > (b)) - ((a) < (b)))
-	int compare(const Bignum &x) const {
-		if (numDigit != x.numDigit) return COMPARE(numDigit, x.numDigit);
-		for (int i = numDigit - 1; i >= 0; --i)
-			if(digits[i] != x.digits[i]) return COMPARE(digits[i], x.digits[i]);
-		return 0;
-	}
-
-	#define DEF_OPER(o) bool operator o (const Bignum &x) const { return compare(x) o 0; }
-	DEF_OPER(<) DEF_OPER(>) DEF_OPER(>=) DEF_OPER(<=) DEF_OPER(==) DEF_OPER(!=)
-	#undef DEF_OPER
-
-	string toString(void) const {
-		string res;
-		for (int i = 0; i < numDigit; ++i) {
-			int tmp = digits[i];
-			for (int j = 0; j < 9; ++j) { res.push_back('0' + tmp % 10); tmp /= 10; }
-		}
-		while (sz(res) > 1 && res.back() == '0') res.pop_back();
-		reverse(res.begin(), res.end());
-		return res;
+		q.trim(); return {q, r};
 	}
 };
