@@ -35,8 +35,17 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-      # Commit & Push changes (if any)
+      # On PRs, expose the PDF for review instead of pushing it
+      - name: Upload PDF
+        if: github.event_name == 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: hcmus-pdf
+          path: hcmus.pdf
+
+      # Commit & Push changes (if any); a PR's merge ref can't be pushed
       - name: Commit and Push changes
+        if: github.event_name != 'pull_request'
         run: |
           git config --global --add safe.directory "$GITHUB_WORKSPACE"
           git add .
