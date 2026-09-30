@@ -8,7 +8,7 @@
  */
 #pragma once
 
-const int N = 2e5 + 5;
+const int N = 5e5 + 5;
 vector<pii> adj[N]; // {v, edge id}
 int num[N], low[N];
 

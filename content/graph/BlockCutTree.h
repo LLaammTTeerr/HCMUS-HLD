@@ -10,7 +10,7 @@
  */
 #pragma once
 
-const int N = 2e5 + 5;
+const int N = 5e5 + 5;
 vi adj[N], adjp[2 * N];
 int num[N], low[N], lastComp[N], numNode, numBCC;
 stack<int> st;

@@ -7,7 +7,7 @@
  */
 #pragma once
 
-const int N = 2e5 + 5;
+const int N = 5e5 + 5;
 vi adj[N]; int child[N]; bool del[N];
 
 int centroid(int u, int parent, int n) {

@@ -7,7 +7,7 @@
  * Time: $O(V + E)$
  */
 #pragma once
-const int N = 2e5 + 5, M = 2e5 + 5; // vertices, edges
+const int N = 5e5 + 5, M = 5e5 + 5; // vertices, edges
 struct Edge {
 	int target, id;
 
