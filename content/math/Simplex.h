@@ -1,15 +1,12 @@
 /**
-* Two-phase simplex algorithm for solving linear programs of the form
-*      maximize     cx
-*      subject to   A[j][i].x[i] <= b[j] (x >= 0)
-*  in:   A -- an m x n matrix
-*        b -- an m-dimensional vector
-*        c -- an n-dimensional vector
-*        x -- a vector where the optimal solution will be stored
-*  out: value of the optimal solution (infinity if unbounded above, nan if infeasible)
-*  To use this code, create an LPSolver object with A, b, and c as arguments.  Then, call Solve(x).
-*/
-#pragma once 
+ * Author: Stanford ACM notebook
+ * Description: Two-phase simplex. Solves max $c^T x$ s.t. $Ax \le b$,
+ * $x \ge 0$ ($A$ is $m \times n$). Solve(x) returns the optimum and
+ * stores an optimal x; returns inf if unbounded, -inf if infeasible.
+ * Usage: LPSolver lp(A, b, c); VD x; DOUBLE v = lp.Solve(x);
+ * Time: O(NM) per pivot, exponential worst case
+ */
+#pragma once
 
 typedef long double DOUBLE;
 typedef vector<DOUBLE> VD;
@@ -79,29 +76,3 @@ struct LPSolver {
 		return D[m][n + 1];
 	}
 };
-
-int32_t main() {
-	const int m = 4, n = 3;
-	DOUBLE _A[m][n] = {
-		{  6, -1,  0 },
-		{ -1, -5,  0 },
-		{  1,  5,  1 },
-		{ -1, -5, -1 }
-	};
-	DOUBLE _b[m] = { 10, -4, 5, -5 };
-	DOUBLE _c[n] = { 1, -1, 0 };
-
-	VVD A(m);
-	VD b(_b, _b + m);
-	VD c(_c, _c + n);
-	for (int i = 0; i < m; i++) A[i] = VD(_A[i], _A[i] + n);
-
-	LPSolver solver(A, b, c);
-	VD x;
-	DOUBLE value = solver.Solve(x);
-
-	cerr << "VALUE: " << value << endl; // VALUE: 1.29032
-	cerr << "SOLUTION:"; // SOLUTION: 1.74194 0.451613 1
-	for (size_t i = 0; i < x.size(); i++) cerr << " " << x[i];
-	return 0;
-}

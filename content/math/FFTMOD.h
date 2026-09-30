@@ -1,3 +1,13 @@
+/**
+ * Author: KACTL (Ludo Pulles, chilli, Simon Lindholm)
+ * Description: Convolution of arbitrary ll vectors modulo any MOD,
+ * via 2 FFTs of size $\ge |a|+|b|$ splitting at $\sqrt{MOD}$.
+ * Inputs must be in $[0, MOD)$. Precise for MOD $\lesssim 10^9$ and
+ * N up to $\sim 10^6$; wrong for MOD near $2^{50}$.
+ * Usage: convMod<1000000007>(a, b)
+ * Time: O(N \log N)
+ * Status: Library Checker convolution\_mod\_1000000007
+ */
 #pragma once
 
 typedef complex<double> C;
@@ -46,11 +56,4 @@ template<ll MOD> vector<ll> convMod(const vector<ll> &a, const vector<ll> &b) {
 		res[i] = ((av % MOD * cut % MOD + bv) % MOD * cut % MOD + cv) % MOD;
 	}
 	return res;
-}
-
-void mul(int a[], int b[], ll c[]) {
-	vector<ll> pa, pb;
-	for (int i = 0; i < k; ++i) pa.push_back(a[i]), pb.push_back(b[i]);
-	vector<ll> res = convMod<MOD>(pa, pb);
-	for (int i = 0; i < sz(res); ++i) c[i] = res[i];
 }

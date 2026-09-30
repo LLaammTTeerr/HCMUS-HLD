@@ -2,47 +2,38 @@
  * Author: Phan Binh Nguyen Lam
  * Date: 2024-11-07
  * License: CC0
- * Description: Gaussian Elimination for solving systems of linear equations.
- * Usage:
- *  gauss({{1, 2, 3}, {4, 5, 6}}); // returns {1, -2}
- *  can be use for modulo arithmetic, but be careful with division
- *  replace Z with the desired type
- * Time: $O(N^3)$
+ * Description: Solves $Ax = b$ over doubles. Input is the augmented
+ * $n \times (m+1)$ matrix $[A | b]$. Returns false if inconsistent;
+ * otherwise x is one solution (free variables set to 0).
+ * Usage: vector<double> x;
+ * gauss({{1, 2, 3}, {4, 5, 6}}, x); // x = {-1, 2}
+ * Time: O(N M \min(N, M))
  */
 #pragma once
 
-using Z = double;
-
-std::vector <Z>* gauss(std::vector <std::vector <Z>> a) {
-  #define ABS(x) ((x) < 0 ? -(x) : (x))
-	int n = (int) a.size();
-	int m = (int) a[0].size() - 1;
-
-	std::vector <int> pivot(m, -1);
-
-	for (int col = 0, row = 0; col < m and row < n; col++) {
+const double EPS = 1e-9;
+bool gauss(vector<vector<double>> a, vector<double>& x) {
+	int n = sz(a), m = n ? sz(a[0]) - 1 : 0;
+	vi pivot(m, -1);
+	for (int col = 0, row = 0; col < m && row < n; col++) {
 		int cur = row;
-		for (int i = row; i < n; i++) if (ABS(a[i][col]) > ABS(a[cur][col])) cur = i;
-		if (a[cur][col] == 0) continue;
-		for (int i = col; i <= m; i++) swap(a[cur][i], a[row][i]);
+		rep(i,row,n) if (fabs(a[i][col]) > fabs(a[cur][col])) cur = i;
+		if (fabs(a[cur][col]) < EPS) continue;
+		swap(a[cur], a[row]);
 		pivot[col] = row;
-
-		for (int i = 0; i < n; i++) if (i != row) {
-			if (a[i][col] == 0) continue;
-			Z c = a[i][col] / a[row][col];
-			for (int j = col; j <= m; j++) a[i][j] -= a[row][j] * c;
+		rep(i,0,n) if (i != row && fabs(a[i][col]) > EPS) {
+			double c = a[i][col] / a[row][col];
+			rep(j,col,m+1) a[i][j] -= a[row][j] * c;
 		}
 		row++;
 	}
-
-	std::vector <Z> *ans = new std::vector <Z> (m, 0);
-	for (int i = 0; i < m; i++) if (pivot[i] != -1) (*ans)[i] = a[pivot[i]][m] / a[pivot[i]][i];
-	for (int i = 0; i < n; i++) {
-		Z s = a[i][m];
-		for (int j = 0; j < m; j++) s -= (*ans)[j] * a[i][j];
-		if (s) return nullptr;
+	x.assign(m, 0);
+	rep(i,0,m) if (pivot[i] != -1)
+		x[i] = a[pivot[i]][m] / a[pivot[i]][i];
+	rep(i,0,n) {
+		double s = a[i][m];
+		rep(j,0,m) s -= x[j] * a[i][j];
+		if (fabs(s) > EPS) return false;
 	}
-
-	return ans;
-  	#undef ABS
+	return true;
 }

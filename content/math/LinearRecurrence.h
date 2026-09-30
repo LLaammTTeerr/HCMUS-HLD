@@ -7,14 +7,14 @@
  * linear recurrence $S[i] = \sum_j S[i-j-1]tr[j]$,
  * given $S[0 \ldots \ge n-1]$ and $tr[0 \ldots n-1]$.
  * Faster than matrix multiplication.
- * Useful together with Berlekamp--Massey.
+ * Useful together with Berlekamp--Massey. Too slow for $n > 10^4$.
  * Usage: linearRec({0, 1}, {1, 1}, k) // k'th Fibonacci number
  * Time: O(n^2 \log k)
  * Status: bruteforce-tested mod 5 for n <= 5
  */
 #pragma once
 
-const ll mod = 5; /** exclude-line */
+#include "ModPow.h"
 
 typedef vector<ll> Poly;
 ll linearRec(Poly S, Poly tr, ll k) {

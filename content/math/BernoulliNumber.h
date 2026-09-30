@@ -1,36 +1,37 @@
+/**
+ * Author: HCMUS-HLD
+ * Description: Bernoulli numbers $B_0..B_K$ with $B_1 = +\frac12$
+ * (the $B^+$ convention; negate B[1] for $B^-$), and
+ * powerSum $= \sum_{i=1}^{n} i^k = \frac{1}{k+1} \sum_{j=0}^{k}
+ * \binom{k+1}{j} B_j n^{k+1-j}$. Z is a modular type
+ * (MInt<P> from ModInt.h) with prime $P > K + 1$.
+ * Usage: auto B = bernoulli<Z>(K); Z s = powerSum(n, k, B); // k<=K
+ * Time: O(K^2) for bernoulli, O(k \log P) for powerSum
+ */
 #pragma once
 
-inline ll C2(ll n) { return (n & 1) ? (n + 1) / 2 % MOD * (n % MOD) % MOD : n / 2 % MOD * ((n + 1) % MOD) % MOD; }
-
-inline ll nCk(int n, int k) { return (k > n) ? 0 : frac[n] * finv[k] % MOD * finv[n - k] % MOD; }
-
-ll powermod(ll a, int expo); // calc a^expo % MOD in O(log)
-
-ll tmp[MAXN];
-ll bernoulli(int n) {
-	for (int i = 0; i <= n; ++i) {
-		tmp[i] = inv[i + 1];
-		for (int j = i; j > 0; --j) tmp[j - 1] = 1LL * j * (tmp[j - 1] - tmp[j] + MOD) % MOD;
+template<class Z> vector<Z> bernoulli(int K) {
+	vector<Z> B(K + 1), f(K + 2, 1), fi(K + 2);
+	rep(i,1,K+2) f[i] = f[i-1] * Z(i);
+	fi[K+1] = Z(1) / f[K+1];
+	for (int i = K + 1; i; i--) fi[i-1] = fi[i] * Z(i);
+	B[0] = 1;
+	rep(m,1,K+1) {
+		Z s = 0;
+		rep(j,0,m) s += f[m+1] * fi[j] * fi[m+1-j] * B[j];
+		B[m] = Z(0) - s / Z(m + 1);
 	}
-	return tmp[0];
+	if (K) B[1] = Z(0) - B[1];
+	return B;
 }
 
-ll calc(int n) {
-	ll res(0), invn = powermod(n, MOD - 2);
-	n = powermod(n, expo + 1);
-	for (int k = 0; k <= expo; ++k) {
-		res = (res + n * nCk(expo + 1, k) % MOD * B[k] % MOD) % MOD;
-		n = n * invn % MOD;
+template<class Z> Z powerSum(ll n, int k, const vector<Z>& B) {
+	vector<Z> pw(k + 2, 1);
+	rep(i,1,k+2) pw[i] = pw[i-1] * Z(n);
+	Z res = 0, c = 1; // c = C(k+1, j)
+	rep(j,0,k+1) {
+		res += c * B[j] * pw[k+1-j];
+		c = c * Z(k + 1 - j) / Z(j + 1);
 	}
-	return res * powermod(expo + 1, MOD - 2) % MOD;
-}
-
-void init(void) {
-	frac[0] = finv[0] = 1;
-	for (int i = 1; i <= 21; ++i) {
-		frac[i] = frac[i - 1] * i % MOD;
-		finv[i] = powermod(frac[i], MOD - 2);
-		inv[i] = powermod(i, MOD - 2);
-	}
-	for (int i = 0; i <= 20; ++i) B[i] = bernoulli(i);
+	return res / Z(k + 1);
 }
