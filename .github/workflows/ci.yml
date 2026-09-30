@@ -4,7 +4,8 @@ name: CI
 # and build the PDF. Pushes to main that pass both additionally get a
 # GitHub Release with the PDF attached. The version is the latest v*
 # tag bumped by patch; put #minor or #major in the commit message to
-# bump those instead.
+# bump those instead. If a push to main didn't trigger a run, start
+# one by hand (Actions > CI > Run workflow on main) to release it.
 
 on:
   push:
@@ -58,7 +59,7 @@ jobs:
 
   release:
     needs: [test, pdf]
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -77,8 +78,8 @@ jobs:
       - name: Create release
         env:
           GH_TOKEN: ${{ github.token }}
-          MSG: ${{ github.event.head_commit.message }}
         run: |
+          MSG=$(git log -1 --format=%B "$GITHUB_SHA")
           last=$(git tag --list 'v*' --sort=-v:refname | head -n1)
           IFS=. read -r major minor patch <<< "${last:-v0.0.0}"
           major=${major#v}
