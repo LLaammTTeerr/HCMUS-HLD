@@ -220,10 +220,18 @@ def print_header(data, outstream):
     header_length = len("".join(lines[:ind]))
     def adjust(name):
         return name if name.startswith('.') else name.split('.')[0]
-    output = r"\enspace{}".join(map(adjust, lines[:ind]))
+    names = list(map(adjust, lines[:ind]))
     font_size = 10
-    if header_length > 150:
+    if header_length > 45:
         font_size = 8
+    # Keep the header clear of the university/team name on the left.
+    cut = False
+    while len(names) > 2 and len("".join(names)) > 70:
+        del names[-2]
+        cut = True
+    if cut:
+        names.insert(-1, r"\ldots")
+    output = r"\enspace{}".join(names)
     output = r"\hspace{3mm}\textbf{" + output + "}"
     output = "\\fontsize{%d}{%d}" % (font_size, font_size) + output
     print(output, file=outstream)

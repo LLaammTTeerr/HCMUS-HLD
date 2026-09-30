@@ -185,8 +185,8 @@ The time between events in a Poisson process is $\textrm{Exp}(\lambda),\,\lambda
 \subsubsection{Normal distribution}
 Most real random values with mean $\mu$ and variance $\sigma^2$ are well described by $\mathcal{N}(\mu,\sigma^2),\,\sigma>0$.
 \[ f(x) = \frac{1}{\sqrt{2\pi\sigma^2}}e^{-\frac{(x-\mu)^2}{2\sigma^2}} \]
-If $X_1 \sim \mathcal{N}(\mu_1,\sigma_1^2)$ and $X_2 \sim \mathcal{N}(\mu_2,\sigma_2^2)$ then
-\[ aX_1 + bX_2 + c \sim \mathcal{N}(\mu_1+\mu_2+c,a^2\sigma_1^2+b^2\sigma_2^2) \]
+If $X_1 \sim \mathcal{N}(\mu_1,\sigma_1^2)$ and $X_2 \sim \mathcal{N}(\mu_2,\sigma_2^2)$ are independent, then
+\[ aX_1 + bX_2 + c \sim \mathcal{N}(a\mu_1+b\mu_2+c,a^2\sigma_1^2+b^2\sigma_2^2) \]
 
 \section{Markov chains}
 A \emph{Markov chain} is a discrete random process with the property that the next state depends only on the current state.
@@ -196,7 +196,7 @@ and $\mathbf{p}^{(n)} = \mathbf P^n \mathbf p^{(0)}$ is the probability distribu
 where $\mathbf{p}^{(0)}$ is the initial distribution.
 
 % \subsubsection{Stationary distribution}
-$\mathbf{\pi}$ is a stationary distribution if $\mathbf{\pi} = \mathbf{\pi P}$.
+$\mathbf{\pi}$ is a stationary distribution if $\mathbf{\pi} = \mathbf{P\pi}$.
 If the Markov chain is \emph{irreducible} (it is possible to get to any state from any state),
 then $\pi_i = \frac{1}{\mathbb{E}(T_i)}$ where $\mathbb{E}(T_i)$  is the expected time between two visits in state $i$.
 $\pi_j/\pi_i$ is the expected number of visits in state $j$ between two visits in state $i$.
@@ -206,7 +206,7 @@ For a connected, undirected and non-bipartite graph, where the transition probab
 % \subsubsection{Ergodicity}
 A Markov chain is \emph{ergodic} if the asymptotic distribution is independent of the initial distribution.
 A finite Markov chain is ergodic iff it is irreducible and \emph{aperiodic} (i.e., the gcd of cycle lengths is 1).
-$\lim_{k\rightarrow\infty}\mathbf{P}^k = \mathbf{1}\pi$.
+$\lim_{k\rightarrow\infty}\mathbf{P}^k = \pi\mathbf{1}^T$.
 
 % \subsubsection{Absorption}
 A Markov chain is an A-chain if the states can be partitioned into two sets $\mathbf{A}$ and $\mathbf{G}$, such that all states in $\mathbf{A}$ are absorbing ($p_{ii}=1$), and all states in $\mathbf{G}$ leads to an absorbing state in $\mathbf{A}$.
@@ -214,7 +214,7 @@ The probability for absorption in state $i\in\mathbf{A}$, when the initial state
 The expected time until absorption, when the initial state is $i$, is $t_i = 1+\sum_{k\in\mathbf{G}}p_{ki}t_k$.
 
 \section{Bézout's identity}
-For $a \neq $, $b \neq 0$, then $d=gcd(a,b)$ is the smallest positive integer for which there are integer solutions to
+For $a \neq 0$, $b \neq 0$, then $d=gcd(a,b)$ is the smallest positive integer for which there are integer solutions to
 $$ax+by=d$$
 If $(x,y)$ is one solution, then all solutions are given by
 $$\left(x+\frac{kb}{\gcd(a,b)}, y-\frac{ka}{\gcd(a,b)}\right), \quad k\in\mathbb{Z}$$
@@ -237,6 +237,7 @@ $$\left(x+\frac{kb}{\gcd(a,b)}, y-\frac{ka}{\gcd(a,b)}\right), \quad k\in\mathbb
 
 \kactlimport{InverseModulo.h}
 \kactlimport{PolyInterpolate.h}
+\kactlimport{ModPow.h}
 \kactlimport{BerlekampMassey.h}
 \kactlimport{LinearRecurrence.h}
 \kactlimport{GaussianElimination.h}

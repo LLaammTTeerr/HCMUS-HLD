@@ -20,9 +20,14 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
+      # hash.sh needs the C preprocessor; without it every hash
+      # in the PDF is d41d8c (md5 of empty input).
+      - name: Install cpp
+        run: apt-get update && apt-get install -y --no-install-recommends cpp
+
       # Build PDF
       - name: Build PDF
-        run: make hcmus
+        run: make hcmus </dev/null
 
       # Configure Git for commits
       - name: Configure Git
