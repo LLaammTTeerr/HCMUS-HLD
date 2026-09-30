@@ -3,9 +3,10 @@
  * Description: Block-cut tree, vertices 1..n (num[0] is the
  * timer). Globals: adj[], num[], low[],
  * lastComp[], stack<int> st, numNode, numBCC, adjp[] (size
- * numNode + \#blocks). Block i is node numNode + i, adjacent to
- * its vertices. Call tarjan(u) for each unvisited u; isolated
- * vertices get no block.
+ * numNode + \#blocks). Block i is node numNode + i. Edges are
+ * parent->child: adjp[u] = child blocks of vertex u, adjp[block] =
+ * its vertices except the top one, so block = \{top\} + adjp[block].
+ * Call tarjan(u) for each unvisited u; isolated vertices get no block.
  * Time: $O(V + E)$
  */
 #pragma once

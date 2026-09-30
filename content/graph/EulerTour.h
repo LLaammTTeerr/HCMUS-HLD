@@ -2,8 +2,10 @@
  * Author: HCMUS-HLD
  * Description: Euler walk (Hierholzer). Undirected: add edge id to
  * both endpoints; directed: only to adj[from]. Start at an odd
- * vertex (directed: out - in = 1) if any. No existence check: the
- * walk is valid iff its size is m + 1. Recursion depth up to m.
+ * vertex (directed: out - in = 1) if any. No existence check:
+ * valid iff the degree condition holds (undirected: 0 or 2 odd
+ * vertices; directed: in = out except start/end) AND size = m + 1.
+ * Recursion depth up to m.
  * Time: $O(V + E)$
  */
 #pragma once

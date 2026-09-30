@@ -6,9 +6,12 @@ g++ -Wall -Wextra -Wfatal-errors -Wconversion -std=c++17 -x c++-header $DIR/cont
 trap "rm -f $DIR/content/contest/template.cpp.gch" EXIT
 
 SCRIPT_DIR=$DIR/doc/scripts
-tests="$(find $DIR/content -name '*.h' | grep -vFf $SCRIPT_DIR/skip_headers)"
-echo "skipped: "
-find $DIR/content -name '*.h' | grep -Ff $SCRIPT_DIR/skip_headers
+# Only headers printed in the PDF (\kactlimport lines that aren't
+# commented out); dropped files may not compile.
+tests="$(for ch in $DIR/content/*/chapter.tex; do
+    grep -oP '^\s*\\kactlimport(\[[^]]*\])?\{\K[^}]*\.h' $ch |
+        sed "s|^|$(dirname $ch)/|"
+done)"
 declare -i pass=0
 declare -i fail=0
 failHeaders=""
