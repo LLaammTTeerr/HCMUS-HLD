@@ -1,3 +1,12 @@
+/**
+ * Author: HCMUS-HLD (after cp-algorithms)
+ * Description: Maintains the number of bridges while edges are
+ * added online. Vertices 0..n-1; call init(n) first, then
+ * add\_edge(a, b); the global bridges holds the current count.
+ * Time: O(\log n) amortized per edge.
+ */
+#pragma once
+
 vector<int> par, dsu_2ecc, dsu_cc, dsu_cc_size;
 int bridges;
 int lca_iteration;

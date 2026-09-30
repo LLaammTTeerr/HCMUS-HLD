@@ -1,6 +1,6 @@
 /**
  * Author: HCMUS-HLD
- * Description: Convolution modulo MOD = 998244353 (= 119 * 2^{23} + 1,
+ * Description: Convolution modulo MOD = 998244353 ($= 119 \cdot 2^{23} + 1$,
  * primitive root 3). Inputs may be any ll; they are reduced mod MOD.
  * For other NTT primes $c \cdot 2^k + 1$ change MOD and G.
  * Usage: convolution({1, 2}, {3, 4}) // {3, 10, 8}

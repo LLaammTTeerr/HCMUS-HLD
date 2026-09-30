@@ -2,7 +2,7 @@
  * Author: HCMUS-HLD
  * Description: Prefix function, 1-indexed: str[0] is a dummy
  * char, lps[i] = longest proper border of str[1..i]. To find
- * pattern P in T run on " " + P + "#" + T.
+ * pattern P in T run on " " + P + "\#" + T.
  * Time: O(N)
  */
 #pragma once

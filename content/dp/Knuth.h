@@ -1,7 +1,7 @@
 /**
  * Author: HCMUS-HLD
  * Description: Knuth optimization for
- * dp[i][j] = min_{i<=k<j} dp[i][k] + dp[k+1][j] + C(i, j).
+ * $dp[i][j] = \min_{i\le k<j} dp[i][k] + dp[k+1][j] + C(i, j)$.
  * Valid when C satisfies the quadrangle inequality
  * C(a,c)+C(b,d) <= C(a,d)+C(b,c) (a<=b<=c<=d) and is monotone
  * on inclusion; then opt[i][j-1] <= opt[i][j] <= opt[i+1][j].

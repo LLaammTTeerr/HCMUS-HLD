@@ -1,8 +1,8 @@
 /**
  * Author: HCMUS-HLD
- * Description: Set of integers in [0, 64^LAYER) (262144 for
- * LAYER=3). update(x) toggles x. walk_forward(x) = smallest
- * element >= x, walk_backward(x) = largest element < x
+ * Description: Set of integers in $[0, 64^{LAYER})$ (262144 for
+ * LAYER=3). update(x) toggles x. walk\_forward(x) = smallest
+ * element >= x, walk\_backward(x) = largest element < x
  * (-1 if none). Call init() first.
  * Time: O(LAYER) per operation.
  */

@@ -3,7 +3,7 @@
  * Description: Fast allocation of up to MAX objects of type T from
  * a static buffer; memory is never freed. Beyond MAX it silently
  * falls back to the heap. The pool holds sizeof(T)*MAX bytes, so
- * declare it global/static. Needs GCC 9+ (<memory_resource>).
+ * declare it global/static. Needs GCC 9+ (memory\_resource).
  * Usage: MemoryPool<Node, 1<<20> pool; Node* x = pool.allocate();
  * Time: O(1)
  */

@@ -7,6 +7,9 @@
  */
 #pragma once
 
+const int N = 2e5 + 5;
+vi adj[N]; int child[N]; bool del[N];
+
 int centroid(int u, int parent, int n) {
 	for (int v : adj[u])
 		if (v != parent && child[v] > n/2 && !del[v])

@@ -4,7 +4,7 @@
  * sz(str), call buildSA(). sa[i] = start of i-th smallest
  * suffix, pos = inverse of sa, lcp[i] = LCP(sa[i], sa[i+1]).
  * Needs str[strLen] to be a unique terminator (std::string
- * gives '\0').
+ * gives a NUL char).
  * Time: $O(N \log^2(N))$
  */
 #pragma once

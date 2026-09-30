@@ -1,7 +1,7 @@
 /**
  * Author: Simon Lindholm (KACTL)
- * Description: Hash map ~3x faster than unordered_map, with
- * an anti-hack hash. Use like unordered_map (h[k], h.find).
+ * Description: Hash map ~3x faster than unordered\_map, with
+ * an anti-hack hash. Use like unordered\_map (h[k], h.find).
  */
 #pragma once
 #include <bits/extc++.h>

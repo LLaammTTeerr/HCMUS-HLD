@@ -7,6 +7,8 @@
  */
 #pragma once
 
+const int N = 64;
+
 int g[N][N];
 int res;
 ll edges[N];

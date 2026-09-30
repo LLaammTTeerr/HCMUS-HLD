@@ -8,6 +8,10 @@
  */
 #pragma once
 
+const int N = 2e5 + 5;
+vector<pii> adj[N]; // {v, edge id}
+int num[N], low[N];
+
 void tarjan(int u, int p_id) {
 	low[u] = num[u] = ++num[0];
 	int numChild = 0;

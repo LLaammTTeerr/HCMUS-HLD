@@ -3,12 +3,17 @@
  * Description: Block-cut tree, vertices 1..n (num[0] is the
  * timer). Globals: adj[], num[], low[],
  * lastComp[], stack<int> st, numNode, numBCC, adjp[] (size
- * numNode + #blocks). Block i is node numNode + i, adjacent to
+ * numNode + \#blocks). Block i is node numNode + i, adjacent to
  * its vertices. Call tarjan(u) for each unvisited u; isolated
  * vertices get no block.
  * Time: $O(V + E)$
  */
 #pragma once
+
+const int N = 2e5 + 5;
+vi adj[N], adjp[2 * N];
+int num[N], low[N], lastComp[N], numNode, numBCC;
+stack<int> st;
 
 void tarjan(int u) {
 	low[u] = num[u] = ++num[0];

@@ -1,7 +1,11 @@
 /**
- * Usage: maximum matching on general graph.
- * Time: $O(V^3)$ 
-*/
+ * Author: HCMUS-HLD
+ * Description: Maximum matching in a general graph (Edmonds'
+ * blossom), 0-indexed. solve() returns the matching size; match[v]
+ * is v's partner or -1.
+ * Usage: Blossom B(n); B.addEdge(u, v); int k = B.solve();
+ * Time: O(V^3)
+ */
 
 #pragma once
 

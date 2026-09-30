@@ -1,7 +1,7 @@
 /**
  * Author: Simon Lindholm (KACTL)
- * Description: Set with order statistics. find_by_order(k)
- * returns the k-th element (0-indexed), order_of_key(x) the
+ * Description: Set with order statistics. find\_by\_order(k)
+ * returns the k-th element (0-indexed), order\_of\_key(x) the
  * number of elements < x. For a multiset use pair<T, int>.
  * Time: O(\log N)
  */

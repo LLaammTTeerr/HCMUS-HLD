@@ -21,7 +21,8 @@ def pathescape(input):
     return input
 
 def codeescape(input):
-    input = input.replace('_', r'\_')
+    for c in '_&%#':
+        input = input.replace(c, '\\' + c)
     input = input.replace('\n', '\\\\\n')
     input = input.replace('{', r'\{')
     input = input.replace('}', r'\}')
@@ -226,7 +227,7 @@ def print_header(data, outstream):
         font_size = 8
     # Keep the header clear of the university/team name on the left.
     cut = False
-    while len(names) > 2 and len("".join(names)) > 70:
+    while len(names) > 2 and len("".join(names)) > 60:
         del names[-2]
         cut = True
     if cut:

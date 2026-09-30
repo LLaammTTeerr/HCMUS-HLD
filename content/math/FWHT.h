@@ -3,7 +3,7 @@
  * Description: Xor-convolution modulo prime MOD: $c_k = \sum_{i \oplus j = k}
  * a_i b_j$. sz(a) must be a power of 2. For AND use (u+v, v) / (u-v, v);
  * for OR use (u, u+v) / (u, v-u), without the final 1/n scaling.
- * Usage: FWHT(a), FWHT(b); a[i] = a[i] * b[i] % MOD; FWHT(a, true);
+ * Usage: FWHT(a), FWHT(b); a[i] = a[i]*b[i] mod MOD; FWHT(a, true);
  * Time: O(N \log N)
  * Status: Library Checker bitwise\_xor\_convolution
  */
