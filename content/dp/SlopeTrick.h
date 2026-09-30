@@ -1,21 +1,23 @@
-// Minimum +1/-1 operations to make A[i] increasing.
+/**
+ * Author: HCMUS-HLD
+ * Description: Slope trick example: minimum total |change|
+ * (+1/-1 operations) to make A strictly increasing. For
+ * non-decreasing, drop the "- i". The multiset holds the
+ * breakpoints of the convex function; its max is the argmin.
+ * Time: O(N \log N)
+ */
 #pragma once
-int slope_trick() {
-	int n; cin >> n;
-	multiset<int> slope_changing_points;
-	long long answer = 0;
-	for (int i = 1; i <= n; ++i) {
-		int Ai; cin >> Ai;
-		Ai -= i;
-		slope_changing_points.insert(Ai);
-		if (i == 1) continue;
-		int opt = *slope_changing_points.rbegin();
-		if (Ai < opt) {
-			slope_changing_points.erase(--slope_changing_points.end());
-			slope_changing_points.insert(Ai);
-			answer += opt - Ai;
+
+ll slopeTrick(const vector<ll>& A) {
+	multiset<ll> pts; ll ans = 0;
+	rep(i,0,sz(A)) {
+		ll a = A[i] - i;
+		pts.insert(a);
+		ll opt = *pts.rbegin();
+		if (a < opt) {
+			pts.erase(prev(pts.end()));
+			pts.insert(a), ans += opt - a;
 		}
 	}
-	cout << answer << endl;
-	return 0;
+	return ans;
 }

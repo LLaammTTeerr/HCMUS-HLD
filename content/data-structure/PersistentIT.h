@@ -1,6 +1,16 @@
+/**
+ * Author: HCMUS-HLD
+ * Description: Persistent segment tree of counts over
+ * positions 1..n. init(n); root 0 is the empty version;
+ * newRoot = update(oldRoot, pos, val) adds val at pos;
+ * queryCnt(root, u, v) sums [u, v]. k-th smallest in a
+ * range: walk roots r[R] and r[L-1] together.
+ * Time: O(\log N) per operation, O(\log N) new nodes.
+ */
 #pragma once
 
 namespace PersistentSeg {
+	const int MAXN = 200005;
 	struct SegNode {
 		int cnt, L, R;
 	} seg[50 * MAXN];
@@ -11,7 +21,7 @@ namespace PersistentSeg {
 	
 	int update(int oldID, int l, int r, int pos, int val) {
 		if(l == r) {
-			seg[++nTree] = seg[oldID], ++seg[nTree].cnt;
+			seg[++nTree] = seg[oldID], seg[nTree].cnt += val;
 			return nTree;
 		}
 		int cur(++nTree), mid = (l + r) >> 1;

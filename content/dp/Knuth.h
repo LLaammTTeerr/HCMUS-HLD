@@ -1,31 +1,25 @@
+/**
+ * Author: HCMUS-HLD
+ * Description: Knuth optimization for
+ * dp[i][j] = min_{i<=k<j} dp[i][k] + dp[k+1][j] + C(i, j).
+ * Valid when C satisfies the quadrangle inequality
+ * C(a,c)+C(b,d) <= C(a,d)+C(b,c) (a<=b<=c<=d) and is monotone
+ * on inclusion; then opt[i][j-1] <= opt[i][j] <= opt[i+1][j].
+ * base[i] = dp[i][i]. 0-indexed.
+ * Time: O(N^2)
+ */
 #pragma once
-int solve() {
-	int N;
-	// read N and input
-	int dp[N][N], opt[N][N];
 
-	auto C = [&](int i, int j) {
-		// Implement cost function C.
-	};
-
-	for (int i = 0; i < N; i++) {
-		opt[i][i] = i;
-		// Initialize dp[i][i] according to the problem
+template<class F> ll knuth(int n, vector<ll> base, F C) {
+	vector<vector<ll>> dp(n, vector<ll>(n));
+	vector<vi> opt(n, vi(n));
+	rep(i,0,n) dp[i][i] = base[i], opt[i][i] = i;
+	for (int i = n - 2; i >= 0; --i) rep(j,i+1,n) {
+		ll mn = LLONG_MAX, c = C(i, j);
+		for (int k = opt[i][j-1]; k <= min(j-1, opt[i+1][j]); ++k)
+			if (dp[i][k] + dp[k+1][j] + c <= mn)
+				mn = dp[i][k] + dp[k+1][j] + c, opt[i][j] = k;
+		dp[i][j] = mn;
 	}
-
-	for (int i = N-2; i >= 0; i--) {
-		for (int j = i+1; j < N; j++) {
-			int mn = INT_MAX;
-			int cost = C(i, j);
-			for (int k = opt[i][j-1]; k <= min(j-1, opt[i+1][j]); k++) {
-				if (mn >= dp[i][k] + dp[k+1][j] + cost) {
-					opt[i][j] = k; 
-					mn = dp[i][k] + dp[k+1][j] + cost; 
-				}
-			}
-			dp[i][j] = mn; 
-		}
-	}
-
-	return dp[0][N-1];
+	return dp[0][n-1];
 }

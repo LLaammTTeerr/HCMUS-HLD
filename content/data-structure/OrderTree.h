@@ -1,3 +1,11 @@
+/**
+ * Author: Simon Lindholm (KACTL)
+ * Description: Set with order statistics. find_by_order(k)
+ * returns the k-th element (0-indexed), order_of_key(x) the
+ * number of elements < x. For a multiset use pair<T, int>.
+ * Time: O(\log N)
+ */
+#pragma once
 #include <bits/extc++.h>
 using namespace __gnu_pbds;
 template<class T>

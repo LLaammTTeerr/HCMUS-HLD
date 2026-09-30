@@ -1,51 +1,30 @@
+/**
+ * Author: HCMUS-HLD
+ * Description: Polynomial hash with NMOD moduli. H h(s);
+ * h.get(l, r) is the hash of s[l, r) (0-indexed).
+ * Hashes of equal-length substrings are comparable with ==.
+ * Time: O(N) build, O(NMOD) per query.
+ */
 #pragma once
 
-const int MOD[] = {(int) 1e9 + 2277, (int) 1e9 + 5277, (int) 1e9 + 8277, (int) 1e9 + 9277};
-const int BASE = 256;
+const int NMOD = 2, BASE = 131;
+const ll MD[] = {(ll)1e9 + 2277, (ll)1e9 + 5277};
+typedef array<ll, NMOD> HV;
 
-struct Hash {
-	ll value[NMOD];
-
-	Hash(char c = 0) {
-		for (int i = 0; i < NMOD; ++i) value[i] = c;
-	}
-
-	Hash operator + (const Hash &x) const {
-		Hash res;
-		for (int j = 0; j < NMOD; ++j) {
-			res.value[j] = value[j] + x.value[j];
-			if(res.value[j] >= MOD[j]) res.value[j] -= MOD[j];
+struct H {
+	vector<HV> h, pw;
+	H(const string& s) : h(sz(s) + 1), pw(sz(s) + 1) {
+		rep(j,0,NMOD) h[0][j] = 0, pw[0][j] = 1;
+		rep(i,0,sz(s)) rep(j,0,NMOD) {
+			h[i+1][j] = (h[i][j] * BASE + (unsigned char)s[i])
+				% MD[j];
+			pw[i+1][j] = pw[i][j] * BASE % MD[j];
 		}
+	}
+	HV get(int l, int r) {
+		HV res;
+		rep(j,0,NMOD) res[j] = ((h[r][j] - h[l][j] * pw[r-l][j])
+			% MD[j] + MD[j]) % MD[j];
 		return res;
 	}
-
-	Hash operator - (const Hash &x) const {
-		Hash res;
-		for (int j = 0; j < NMOD; ++j) {
-			res.value[j] = value[j] - x.value[j];
-			if(res.value[j] < 0) res.value[j] += MOD[j];
-		}
-		return res;
-	}
-
-	Hash operator * (int k) const {
-		Hash res;
-		for (int j = 0; j < NMOD; ++j) res.value[j] = value[j] * pw[j][k] % MOD[j];
-		return res;
-	}
-
-	bool operator == (const Hash &x) const {
-		for (int j = 0; j < NMOD; ++j) if(value[j] != x.value[j]) return false;
-		return true;
-	}
-
 };
-
-Hash getHash(int l, int r) { return (hashVal[r] - hashVal[l - 1]) * (n - r); }
-
-void prepare() {
-	for (int j = 0; j < NMOD; ++j) {
-		pw[j][0] = 1;
-		for (int i = 1; i <= n; ++i) pw[j][i] = pw[j][i - 1] * BASE % MOD[j];
-	}
-}

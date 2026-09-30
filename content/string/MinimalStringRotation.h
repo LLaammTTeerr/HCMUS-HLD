@@ -1,3 +1,10 @@
+/**
+ * Author: HCMUS-HLD
+ * Description: Start index of the lexicographically minimal
+ * rotation of s (smallest such index on ties).
+ * Time: O(N)
+ */
+#pragma once
 int minmove(string s) {
 	int n = s.length();
 	int x, y, i, j, u, v; // x is the smallest string before string y

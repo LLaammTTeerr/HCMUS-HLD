@@ -1,6 +1,17 @@
+/**
+ * Author: HCMUS-HLD
+ * Description: Manacher, 1-indexed. Manacher M(s); then
+ * pod[i]: s[i-k..i+k] is a palindrome for k <= pod[i];
+ * pev[i]: s[i-k+1..i+k] is a palindrome for k <= pev[i]
+ * (even, centred between i and i+1).
+ * Time: O(N)
+ */
 #pragma once
-int n; string S;
-int pod[MaxN], pev[MaxN];
+
+struct Manacher {
+int n; string S; vi pod, pev;
+Manacher(const string& s) : n(sz(s)), S(" " + s),
+	pod(n + 2), pev(n + 2) { calc_pod(); calc_pev(); }
 
 void calc_pod() {
 	int L = 1, R = 0;
@@ -29,8 +40,4 @@ void calc_pev() {
 		}
 	}
 }
-
-// n = S.length();
-// S = ' ' + S;
-// calc_pod();
-// calc_pev();
+};

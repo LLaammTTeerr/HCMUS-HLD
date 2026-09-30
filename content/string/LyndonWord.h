@@ -1,3 +1,10 @@
+/**
+ * Author: HCMUS-HLD
+ * Description: Duval: prints the Lyndon factorization of s
+ * (non-increasing sequence of Lyndon words).
+ * Time: O(N)
+ */
+#pragma once
 void lyndon(string s) {
 	int n = (int) s.length();
 	int i = 0;

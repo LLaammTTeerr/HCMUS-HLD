@@ -1,10 +1,17 @@
+/**
+ * Author: HCMUS-HLD
+ * Description: Set of integers in [0, 64^LAYER) (262144 for
+ * LAYER=3). update(x) toggles x. walk_forward(x) = smallest
+ * element >= x, walk_backward(x) = largest element < x
+ * (-1 if none). Call init() first.
+ * Time: O(LAYER) per operation.
+ */
 #pragma once
 
+typedef unsigned long long ull;
 struct BitsetTree {
-	static const int LAYER = 3; // number of layer is log64(n)
-	static const int BLOCK = 64;
-
-	ull a[MAXN + 100];
+	static const int LAYER = 3, BLOCK = 64;
+	ull a[1 + 64 + 64 * 64]; // sum of 64^i, i < LAYER
 	int layer_start[LAYER];
 
 	void update(int x) {
@@ -19,8 +26,7 @@ struct BitsetTree {
 	}
 
 	inline int findR(ull mask, int i) {
-		ull x(-1); mask &= (x << i);
-		if(i >= BLOCK || mask == 0) return -1;
+		if(i >= BLOCK || !(mask &= ~0ULL << i)) return -1;
 		return __builtin_ctzll(mask);
 	}
 
@@ -44,8 +50,8 @@ struct BitsetTree {
 	}
 
 	int findL(ull mask, int i) {
-		mask &= (1ULL << i) - 1;
-		if(i >= BLOCK || mask == 0) return -1;
+		if(i < BLOCK) mask &= (1ULL << i) - 1;
+		if(!mask) return -1;
 		return 63 - __builtin_clzll(mask);
 	}
 

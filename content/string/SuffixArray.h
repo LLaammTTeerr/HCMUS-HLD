@@ -1,11 +1,18 @@
 /**
+ * Author: HCMUS-HLD
+ * Description: 0-indexed suffix array. Set str, strLen =
+ * sz(str), call buildSA(). sa[i] = start of i-th smallest
+ * suffix, pos = inverse of sa, lcp[i] = LCP(sa[i], sa[i+1]).
+ * Needs str[strLen] to be a unique terminator (std::string
+ * gives '\0').
  * Time: $O(N \log^2(N))$
-*/
-
+ */
 #pragma once
 
 namespace SuffixArray {
-	int tmp[MAXN], gap;
+	const int MAXN = 500005;
+	string str; int strLen;
+	int sa[MAXN], pos[MAXN], lcp[MAXN], tmp[MAXN], gap;
 	bool sufCmp(int i, int j) {
 		if(pos[i] != pos[j]) return (pos[i] < pos[j]);
 		return (max(i, j) + gap < strLen) ? (pos[i + gap] < pos[j + gap]) : (i > j);

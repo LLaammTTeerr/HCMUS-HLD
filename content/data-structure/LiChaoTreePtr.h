@@ -1,28 +1,37 @@
+/**
+ * Author: HCMUS-HLD
+ * Description: Li Chao tree for MAXIMUM, dynamic nodes.
+ * update(L, R, u, v, line) adds line on x in [u, v] (use
+ * u=L, v=R for a full line); query(L, R, x). L, R = domain.
+ * For minimum insert (-a, -b) and negate the answer.
+ * Answers below -INF are clamped to -INF.
+ * Time: O(\log C) per full line, O(\log^2 C) per segment.
+ */
 #pragma once
 
-const int64_t INF = 1e18 + 7;
+const ll INF = (ll)1e18;
 
-struct Line {
-	int64_t a, b;
+struct LiLine {
+	ll a, b;
 
-	Line(int64_t a = 0, int64_t b = -INF) : a(a), b(b) {}
+	LiLine(ll a = 0, ll b = -INF) : a(a), b(b) {}
 
-	inline int64_t operator () (int64_t x) const { return a * x + b; }
+	inline ll operator () (ll x) const { return a * x + b; }
 };
 
 struct LiChao {
-	Line value;
+	LiLine value;
 	LiChao* lef;
 	LiChao* rig;
 
-	LiChao(void) : value(Line()), lef(nullptr), rig(nullptr) {}
+	LiChao(void) : value(LiLine()), lef(nullptr), rig(nullptr) {}
 
-	void update(int l, int r, int u, int v, const Line& LINE) {
+	void update(int l, int r, int u, int v, const LiLine& LINE) {
 		if (l > r or u > v or u > r or l > v)
 			return;
 
 		if (u <= l and r <= v) {
-			Line current = value, other = LINE;
+			LiLine current = value, other = LINE;
 			if (current(l) > other(l))
 				swap(current, other);
 
@@ -53,10 +62,10 @@ struct LiChao {
 		rig->update(m + 1, r, u, v, LINE);
 	}
 
-	int64_t query(int l, int r, int x) {
+	ll query(int l, int r, int x) {
 		if (l > r or x > r or l > x)
 			return -INF;
-		int64_t ans = value(x);
+		ll ans = value(x);
 
 		int m = (l + r) >> 1;
 		ans = max(ans, lef ? lef->query(l, m, x) : -INF);

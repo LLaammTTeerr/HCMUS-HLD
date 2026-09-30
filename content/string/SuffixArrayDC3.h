@@ -1,6 +1,11 @@
 /**
+ * Author: HCMUS-HLD
+ * Description: Suffix array by SA-IS (file name says DC3).
+ * SuffixArray S(s); positions are 1-indexed: S.sa[1..n] =
+ * suffix starts (1..n) in order, S.pos = inverse,
+ * S.lcp[i] = LCP(sa[i], sa[i+1]) for i < n.
  * Time: $O(N)$
-*/
+ */
 
 #pragma once
 
@@ -14,8 +19,7 @@
 typedef unsigned char unc;
 class SuffixArray {
 	public:
-		int *sa, *lcp, *pos, n;
-		unc *s;
+		int n; string str; unc *s; vi sa, lcp, pos;
 
 		void getBuckets(unc s[], vector<int> &bkt, int n, int k, int cs, int end) {
 			for (int i = 0; i <= k; ++i) bkt[i] = 0;
@@ -97,12 +101,11 @@ class SuffixArray {
 			}
 		}
 
-		SuffixArray() : n(0), sa(NULL), lcp(NULL), pos(NULL), s(NULL) {}
-		
-		SuffixArray(string ss) : n(sz(ss)) {
-			sa = new int[n + 7], lcp = new int[n + 7], pos = new int[n + 7];
-			s = (unc*) ss.c_str();
-			buildSA(s, sa, n + 1, 256, sizeof(char));
+		SuffixArray(const string& ss) : n(sz(ss)), str(ss),
+				sa(n + 7), lcp(n + 7), pos(n + 7) {
+			s = (unc*) str.c_str();
+			if (!n) return;
+			buildSA(s, sa.data(), n + 1, 256, sizeof(char));
 			for (int i = 1; i <= n; ++i) ++sa[i];
 			buildLCP();
 		}

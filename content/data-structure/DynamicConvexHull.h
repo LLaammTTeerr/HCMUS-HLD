@@ -1,6 +1,9 @@
 /**
- * Description: Dynamic Convex Hull find Min
+ * Author: Simon Lindholm (KACTL LineContainer)
+ * Description: Add lines y = kx + m, query MAXIMUM at x.
+ * For minimum, add (-k, -m) and negate the query result.
  * Usage: For doubles, use inf $=$ $1/.0$, div(a,b) $=$ $a/b$
+ * Time: O(\log N)
  */
 
 #pragma once
@@ -14,7 +17,6 @@ struct Line {
 
 struct DynamicHull : multiset<Line, less<>> {
 	const ll inf = LLONG_MAX;
-   
 	ll div(ll a, ll b) { return a / b - ((a ^ b) < 0 && a % b); }
 
 	bool bad(iterator x, iterator y) {

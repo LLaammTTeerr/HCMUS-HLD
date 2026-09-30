@@ -1,44 +1,30 @@
+/**
+ * Author: HCMUS-HLD
+ * Description: DSU keeping parity to the root. add(a,b) says
+ * a and b have different colours; ok(v) tells whether v's
+ * component is still bipartite. par(v) = colour of v relative
+ * to its root. Nodes 0..n-1.
+ * Time: O(\alpha(N)) amortized.
+ */
 #pragma once
-vector<pair<int, int>> parent;
-vector<int> rank, bipartite;
 
-inline void make_set(int v) {
-	parent[v] = make_pair(v, 0);
-	rank[v] = 0;
-	bipartite[v] = true;
-}
-
-pair<int, int> find_set(int v) {
-	if (v != parent[v].first) {
-		int parity = parent[v].second;
-		parent[v] = find_set(parent[v].first);
-		parent[v].second ^= parity;
+struct BipDSU {
+	vi p, d, rk, bip;
+	BipDSU(int n) : p(n), d(n), rk(n), bip(n, 1) {
+		iota(all(p), 0);
 	}
-	return parent[v];
-}
-
-inline void add_edge(int a, int b) {
-	pair<int, int> pa = find_set(a);
-	a = pa.first;
-	int x = pa.second;
-
-	pair<int, int> pb = find_set(b);
-	b = pb.first;
-	int y = pb.second;
-
-	if (a == b) {
-		if (x == y)
-			bipartite[a] = false;
-	} else {
-		if (rank[a] < rank[b])
-			swap (a, b);
-		parent[b] = make_pair(a, x^y^1);
-		bipartite[a] &= bipartite[b];
-		if (rank[a] == rank[b])
-			++rank[a];
+	int find(int v) { // also sets d[v] = parity to root
+		if (p[v] == v) return v;
+		int r = find(p[v]);
+		d[v] ^= d[p[v]]; return p[v] = r;
 	}
-}
-
-inline bool is_bipartite(int v) {
-	return bipartite[find_set(v).first];
-}
+	void add(int a, int b) {
+		int x = find(a), y = find(b), w = d[a] ^ d[b] ^ 1;
+		if (x == y) { if (w) bip[x] = 0; return; }
+		if (rk[x] < rk[y]) swap(x, y);
+		p[y] = x, d[y] = w, bip[x] &= bip[y];
+		rk[x] += rk[x] == rk[y];
+	}
+	bool ok(int v) { return bip[find(v)]; }
+	int par(int v) { find(v); return d[v]; }
+};

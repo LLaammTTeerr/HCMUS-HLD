@@ -1,3 +1,9 @@
+/**
+ * Author: Simon Lindholm (KACTL)
+ * Description: Hash map ~3x faster than unordered_map, with
+ * an anti-hack hash. Use like unordered_map (h[k], h.find).
+ */
+#pragma once
 #include <bits/extc++.h>
 // To use most bits rather than just the lowest ones :
 struct chash { // large odd number for C

@@ -1,10 +1,17 @@
 /**
- * Usage: can split into k parts and then reverse $/$ get sum these parts
- * Time: $O(log N)$ average
-*/
+ * Author: HCMUS-HLD
+ * Description: Implicit splay tree over positions 1..nArr
+ * (node i = element i). root = buildSplay(1, nArr);
+ * split(T, A, B, c): A = first c elements, B = rest;
+ * join(A, B) concatenates. Only sizes are maintained: add
+ * lazy tags / sums in update() and push them before
+ * descending in locate() if needed.
+ * Time: O(\log N) amortized.
+ */
 #pragma once
 
 namespace SplayTree {
+	const int MAXN = 200005;
 	struct TNode {
 		int sz, p, L, R;
 		TNode() { sz = p = L = R = 0; }
