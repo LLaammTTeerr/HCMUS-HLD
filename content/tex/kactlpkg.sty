@@ -80,9 +80,9 @@
 \pagestyle{fancy}
 \renewcommand{\headrulewidth}{0pt}
 \headheight 25pt
-\lhead{VNUHCM University of Science HCMUS-TrinityForce}
-\chead{\immediate\write18{python3 content/tex/preprocessor.py --print-header "\splitbotmarks\hdrmark|\botmarks\hdrmark" -o \@builddir/header2.tmp}\immediate\input{\@builddir/header2.tmp}}
-\rhead{\thepage}
+\lhead{\@unilong{} -- \@teamname}
+\chead{}
+\rhead{\immediate\write18{python3 content/tex/preprocessor.py --print-header "\splitbotmarks\hdrmark|\botmarks\hdrmark" -o \@builddir/header2.tmp}\immediate\input{\@builddir/header2.tmp}\quad\thepage}
 %\lhead{}\chead{\thepage}\rhead{}
 \lfoot{}\cfoot{}\rfoot{}
 \fancyheadoffset{0pt}
@@ -135,12 +135,12 @@
                                    {\normalfont\LARGE\bfseries}}
 
 \renewcommand\subsection{\@startsection{subsection}{2}{\z@}
-	{1ex\@plus -1ex \@minus -.3ex}
+	{1ex \@plus .5ex \@minus .3ex}
 	{.2ex}
 	{\normalfont\large\bfseries}}
 
 \renewcommand\subsubsection{\@startsection{subsubsection}{3}{\z@}
-	{1ex\@plus -1ex \@minus -.3ex}
+	{1ex \@plus .5ex \@minus .3ex}
 	{1ex \@plus .2ex}
 	{\normalfont\large\bfseries}}
 

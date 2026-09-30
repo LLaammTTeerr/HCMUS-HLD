@@ -1,6 +1,14 @@
+/**
+ * Author: HCMUS-HLD
+ * Description: Heavy-light decomposition, nodes 0..n-1. work(root)
+ * builds; st[u] = position in base array. apply\_on\_path(x, y, f)
+ * calls f(l, r, fromX) on position ranges [l, r] in path order
+ * x -> y. Subtree of u = [st[u], en[u]).
+ * Time: $O(\log^2 n)$ per path with a segment tree.
+ */
 #pragma once
 
-constexpr int max_log = 18;
+constexpr int max_log = 20; // 2^20 > n
  
 struct Tree {
 	int n, T;
@@ -97,7 +105,6 @@ struct Tree {
 			}
 		}
 		f(st[z], st[z], false);
-		int cnt_visited = 0;
 		{
 			int v = y;
 			int cnt_visited = 0;

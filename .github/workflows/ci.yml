@@ -1,0 +1,93 @@
+name: CI
+
+# Every push: compile-check all printed headers, run the stress tests
+# and build the PDF. Pushes to main that pass both additionally get a
+# GitHub Release with the PDF attached. The version is the latest v*
+# tag bumped by patch; put #minor or #major in the commit message to
+# bump those instead.
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Compile every printed header
+        run: make test-compiles
+
+      - name: Stress tests
+        run: make test
+
+  pdf:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    container:
+      image: texlive/texlive:latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # hash.sh needs the C preprocessor; without it every hash
+      # in the PDF is d41d8c (md5 of empty input).
+      - name: Install cpp
+        run: apt-get update && apt-get install -y --no-install-recommends cpp
+
+      - name: Check hash.sh
+        run: |
+          h=$(echo 'int x;' | sh content/contest/hash.sh)
+          echo "hash: $h"
+          test "$h" != d41d8c
+
+      - name: Build PDF
+        run: make hcmus </dev/null
+
+      - name: Check page limit (ICPC WF allows 25)
+        run: |
+          pages=$(grep -oP 'Output written on \S*hcmus.pdf \(\K[0-9]+' build/hcmus.log)
+          echo "pages: $pages"
+          test "$pages" -le 25
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: hcmus-pdf
+          path: hcmus.pdf
+
+  release:
+    needs: [test, pdf]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    concurrency:
+      group: release
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: hcmus-pdf
+
+      - name: Create release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          MSG: ${{ github.event.head_commit.message }}
+        run: |
+          last=$(git tag --list 'v*' --sort=-v:refname | head -n1)
+          IFS=. read -r major minor patch <<< "${last:-v0.0.0}"
+          major=${major#v}
+          case "$MSG" in
+            *'#major'*) major=$((major + 1)); minor=0; patch=0 ;;
+            *'#minor'*) minor=$((minor + 1)); patch=0 ;;
+            *) patch=$((patch + 1)) ;;
+          esac
+          tag="v$major.$minor.$patch"
+          echo "Releasing $tag (previous: ${last:-none})"
+          gh release create "$tag" hcmus.pdf \
+            --target "$GITHUB_SHA" --title "$tag" --generate-notes

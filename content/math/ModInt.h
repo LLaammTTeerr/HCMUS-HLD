@@ -2,10 +2,10 @@
  * Author: Phan Binh Nguyen Lam
  * Date: 2024-11-07
  * License: CC0
- * Description: Operators for modular arithmetic.
- * Usage:
- *  using Z = Mint<MOD>;
- *  Z inverse = CInv<42, MOD>;
+ * Description: Modular arithmetic for prime $P < 2^{30}$.
+ * Usage: using Z = MInt<998244353>;
+ *  Z a = 5, b = a.inv(), c = power(a, 10);
+ *  Z inv42 = CInv<42, 998244353>;
  */
 #pragma once
 

@@ -3,7 +3,7 @@
 This repo hosts HCMUS-HLD's ICPC team reference document.
 It consists of 25 pages of copy-pasteable C++ code, for use in ICPC-style programming competitions.
 
-See [hcmus.pdf](./hcmus.pdf) for the final, browsable version, and [content/](./content/) for raw source code.
+Download the latest PDF from [Releases](https://github.com/LLaammTTeerr/HCMUS-HLD/releases/latest/download/hcmus.pdf) (built and published automatically on every push to `main`), and see [content/](./content/) for raw source code.
 
 ## Aspirations
 
@@ -28,7 +28,8 @@ For nicer alignment you might want to insert `\hardcolumnbreak`, `\columnbreak` 
 though this is usually only done before important contests, and not on the main branch.
 The algorithms that are not included in the pdf are left commented out in `chapter.tex`.
 
-To build HCMUS-HLD, type `make hcmus` (or `make fast`) on a \*nix machine -- this will update `kactl.pdf`.
+To build HCMUS-HLD, type `make hcmus` (or `make fast`) on a \*nix machine -- this will update `hcmus.pdf`.
+Run `make test-compiles` (every printed header compiles after the template) and `make test` (stress tests in `stress-tests/`) before pushing; CI runs both.
 (Windows might work as well, but is not tested.) `doc/README` has a few more notes about this.
 
 Tips:
@@ -50,8 +51,8 @@ Each algorithm contains a header with the author of the code, the date it
 was added, a description of the algorithm, its testing status, and preferably also
 source, license and time complexity.
 
-hcmus.pdf is to be kept to 25 pages + cover page.
-Occasionally the generated hcmus.pdf is committed to the repo for convenience, but not too often because it makes git operations slower.
+hcmus.pdf must stay within 25 pages (ICPC World Finals limit; CI fails otherwise).
+The PDF is not committed: CI builds it on every push, and every push to `main` that passes the tests creates a GitHub Release (version = latest tag bumped by patch; write `#minor` or `#major` in the commit message to bump those).
 
 ## Testing
 

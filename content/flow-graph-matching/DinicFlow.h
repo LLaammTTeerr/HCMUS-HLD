@@ -1,65 +1,54 @@
 /**
- * Time: $O(V^2 \times E)$ for general case
- *
- *  $O(E \times \sqrt(V))$ for unit network or bipartie graph
-*/ 
+ * Author: HCMUS-HLD (after KACTL)
+ * Description: Dinic max flow with capacity scaling. Nodes in
+ * $[0, n]$ (0- or 1-indexed). addEdge(u, v, c, rc) adds u->v cap c
+ * and v->u cap rc (rc = c for undirected). maxFlow does NOT reset
+ * flow: a second call continues in the residual graph. After
+ * maxFlow(s, t), leftOfMinCut(v) = v is on the s side of a min cut.
+ * Flow on an edge e = adj[u][i]: e.flow().
+ * Time: $O(VE\log U)$, $O(E\sqrt V)$ unit caps / bipartite.
+ */
 #pragma once
 
 struct DinicFlow {
-    vector<int> flow, capa;
-    vector<int> point, next, head, work, dist;
-    int numNode, numEdge;
-
-    DinicFlow(int _n = 0) {
-        numNode = _n, numEdge = 0;
-        dist = work = vector<int>(_n + 7, 0);
-        head = vector<int>(_n + 7, -1);
-    }
-
-    void addEdge(int u, int v, int c1, int c2 = 0) {
-        point.push_back(v), capa.push_back(c1), flow.push_back(0);
-        next.push_back(head[u]), head[u] = numEdge++;
-        point.push_back(u), capa.push_back(c2), flow.push_back(0);
-        next.push_back(head[v]), head[v] = numEdge++;
-    }
-
-    bool bfs(int s, int t) {
-        queue<int> qu;
-        for (int i = 1; i <= numNode; ++i) dist[i] = -1;
-        dist[s] = 0; qu.push(s);
-        while(!qu.empty()) {
-            int u(qu.front()); qu.pop();
-            for (int i = head[u]; i >= 0; i = next[i])
-                if(flow[i] < capa[i] && dist[point[i]] < 0) {
-                    dist[point[i]] = dist[u] + 1;
-                    qu.push(point[i]);
-                }
-        }
-        return (dist[t] >= 0);
-    }
-
-    int dfs(int s, int t, int fl) {
-        if(s == t) return fl;
-        for (int &i = work[s]; i >= 0; i = next[i])
-            if(flow[i] < capa[i] && dist[point[i]] == dist[s] + 1) {
-                int d = dfs(point[i], t, min(fl, capa[i] - flow[i]));
-                if(!d) continue;
-                flow[i] += d, flow[i ^ 1] -= d;
-                return d;
-            }
-        return 0;
-    }
-
-    int maxFlow(int s, int t) {
-        for (int i = 0; i < int(flow.size()); ++i) flow[i] = 0;
-        int totFlow(0);
-        while(bfs(s, t)) {
-            for (int i = 1; i <= numNode; ++i) work[i] = head[i];
-            while(true) {
-                int d = dfs(s, t, 1e9+7); totFlow += d;
-                if(!d) break;
-            }
-        }
-        return totFlow;
-    }
+	struct E {
+		int to, rev; ll c, oc;
+		ll flow() { return max(oc - c, 0LL); }
+	};
+	vi lvl, ptr, q;
+	vector<vector<E>> adj;
+	DinicFlow(int n)
+		: lvl(n + 1), ptr(n + 1), q(n + 1), adj(n + 1) {}
+	void addEdge(int u, int v, ll c, ll rc = 0) {
+		adj[u].push_back({v, sz(adj[v]), c, c});
+		adj[v].push_back({u, sz(adj[u]) - 1, rc, rc});
+	}
+	ll dfs(int v, int t, ll f) {
+		if (v == t || !f) return f;
+		for (int &i = ptr[v]; i < sz(adj[v]); i++) {
+			E &e = adj[v][i];
+			if (lvl[e.to] == lvl[v] + 1)
+				if (ll p = dfs(e.to, t, min(f, e.c))) {
+					e.c -= p, adj[e.to][e.rev].c += p;
+					return p;
+				}
+		}
+		return 0;
+	}
+	ll maxFlow(int s, int t) {
+		ll flow = 0; q[0] = s;
+		rep(L, 0, 31) do {
+			lvl = ptr = vi(sz(q));
+			int qi = 0, qe = lvl[s] = 1;
+			while (qi < qe && !lvl[t]) {
+				int v = q[qi++];
+				for (E e : adj[v])
+					if (!lvl[e.to] && e.c >> (30 - L))
+						q[qe++] = e.to, lvl[e.to] = lvl[v] + 1;
+			}
+			while (ll p = dfs(s, t, LLONG_MAX)) flow += p;
+		} while (lvl[t]);
+		return flow;
+	}
+	bool leftOfMinCut(int v) { return lvl[v] != 0; }
 };

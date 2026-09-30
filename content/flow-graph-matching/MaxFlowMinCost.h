@@ -1,66 +1,53 @@
 /**
- * Time: $O(F \times VE)$, F is number of augment paths.
-*/
-
+ * Author: HCMUS-HLD
+ * Description: Min cost max flow with SPFA. Nodes in $[0, n]$.
+ * Negative costs allowed, negative cycles are not.
+ * getFlow(s, t) resets flow and returns \{flow, cost\}.
+ * Time: $O(F \cdot VE)$, F = number of augmenting paths.
+ */
 #pragma once
 
-class MaxFlowMinCost {
-    public:
-        struct Edge {
-            int from, to, capa, flow, cost;
-            Edge(int _u = 0, int _v = 0, int _ca = 0, int _co = 0) : from(_u), to(_v), capa(_ca), flow(0), cost(_co) {}
-            inline int residual(void) const { return capa - flow; }
-        };
- 
-        vector<vector<int>> adj;
-        vector<Edge> E;
-        vector<int> dist, tr;
-        int n;
- 
-        MaxFlowMinCost(int _n = 0) {
-            n = _n, E.clear();
-            adj.assign(_n + 7, vector<int>());
-            dist = vector<int>(_n + 7);
-            tr = vector<int>(_n + 7);
-        }
- 
-        void addEdge(int u, int v, int ca, int co) {
-            adj[u].push_back(E.size());
-            E.push_back(Edge(u, v, ca, co));
-            adj[v].push_back(E.size());
-            E.push_back(Edge(v, u, 0, -co));
-        }
- 
-        bool FordBellman(int s, int t) {
-            for (int i = 1; i <= n; ++i) dist[i] = 1e9+7, tr[i] = 1;
-            queue<int> qu;
-            vector<bool> inq = vector<bool>(n + 7, false);
-            inq[s] = 1, dist[s] = 0; qu.push(s);
-            while(!qu.empty()) {
-                int u(qu.front()); qu.pop();
-                inq[u] = 0;
-                for (auto &it : adj[u]) {
-                    if(E[it].residual() > 0) {
-                        int v(E[it].to);
-                        if(dist[v] > dist[u] + E[it].cost) {
-                            dist[v] = dist[u] + E[it].cost; tr[v] = it;
-                            if(!inq[v]) { inq[v] = 1; qu.push(v); }
-                        }
-                    }
-                }
-            }
-            return (dist[t] < 1e9+7);
-        }
+struct MaxFlowMinCost {
+	struct Edge { int from, to; ll capa, flow, cost; };
+	vector<vi> adj; vector<Edge> E;
+	vector<ll> dist; vi tr;
+	const ll INF = LLONG_MAX / 4;
 
-        ii getFlow(int s, int t) {
-            for (int i = 0; i < int(E.size()); ++i) E[i].flow = 0;
-            int totFlow(0), totCost(0);
-            while(FordBellman(s, t)) {
-                int delta(1e9+7);
-                for (int u = t; u != s; u = E[tr[u]].from) delta = min(delta, E[tr[u]].residual());
-                for (int u = t; u != s; u = E[tr[u]].from) E[tr[u]].flow += delta, E[tr[u] ^ 1].flow -= delta;
-                totFlow += delta, totCost += delta * dist[t];
-            }
-            return ii(totFlow, totCost);
-        }
+	MaxFlowMinCost(int n) : adj(n + 1), dist(n + 1), tr(n + 1) {}
+
+	void addEdge(int u, int v, ll ca, ll co) {
+		adj[u].push_back(sz(E)); E.push_back({u, v, ca, 0, co});
+		adj[v].push_back(sz(E)); E.push_back({v, u, 0, 0, -co});
+	}
+
+	bool spfa(int s, int t) {
+		fill(all(dist), INF);
+		vector<bool> inq(sz(dist));
+		queue<int> qu; dist[s] = 0; qu.push(s);
+		while (sz(qu)) {
+			int u = qu.front(); qu.pop(); inq[u] = 0;
+			for (int id : adj[u]) {
+				Edge &e = E[id];
+				if (e.flow < e.capa && dist[e.to] > dist[u] + e.cost) {
+					dist[e.to] = dist[u] + e.cost; tr[e.to] = id;
+					if (!inq[e.to]) inq[e.to] = 1, qu.push(e.to);
+				}
+			}
+		}
+		return dist[t] < INF;
+	}
+
+	pair<ll, ll> getFlow(int s, int t) {
+		for (auto &e : E) e.flow = 0;
+		ll fl = 0, cost = 0;
+		while (spfa(s, t)) {
+			ll d = INF;
+			for (int u = t; u != s; u = E[tr[u]].from)
+				d = min(d, E[tr[u]].capa - E[tr[u]].flow);
+			for (int u = t; u != s; u = E[tr[u]].from)
+				E[tr[u]].flow += d, E[tr[u] ^ 1].flow -= d;
+			fl += d, cost += d * dist[t];
+		}
+		return {fl, cost};
+	}
 };

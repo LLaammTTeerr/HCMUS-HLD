@@ -1,32 +1,37 @@
 /**
- * Usage: global min cut (all source all sink)
- *  
- *  Input adjacent matrix w (weighted). Output total weight and vertices list of a part.
- *
- * Time: $O(V^3)$ 
-*/
+ * Author: HCMUS-HLD
+ * Description: Global min cut of an undirected graph given as a
+ * weighted adjacency matrix. Returns \{cut weight, vertices of one
+ * side\}. For $n = 1$ returns \{INF, \{\}\}.
+ * Time: $O(V^3)$
+ */
+#pragma once
 
-pair<ll, vector<int>> stoerWagner(vector<vector<ll>> w) {
-    int n = w.size();
-    vector<vector<int>> grp(n); // Original vertices have merged to vertex i
-    for (int i = 0; i < n; i++) grp[i] = {i};
-    vector<int> id(n); iota(id.begin(), id.end(), 0); // alive vertex
-    ll best = INF; vector<int> bestSet;
-    while ((int)id.size() > 1) {
-        int k = id.size();
-        vector<ll> d(k, 0); vector<char> in(k, 0);
-        int prev = -1, last = -1;
-        for (int step = 0; step < k; step++) {
-            int sel = -1;
-            for (int i = 0; i < k; i++) if (!in[i] && (sel < 0 || d[i] > d[sel])) sel = i;
-            in[sel] = 1; prev = last; last = sel;
-            for (int i = 0; i < k; i++) if (!in[i]) d[i] += w[id[sel]][id[i]];
-        }
-        if (d[last] < best) { best = d[last]; bestSet = grp[id[last]]; }
-        int a = id[prev], b = id[last]; // merge b to a
-        for (int i = 0; i < k; i++) { w[a][id[i]] += w[b][id[i]]; w[id[i]][a] = w[a][id[i]]; }
-        grp[a].insert(grp[a].end(), grp[b].begin(), grp[b].end());
-        id.erase(id.begin() + last);
-    }
-    return {best, bestSet};
+pair<ll, vi> stoerWagner(vector<vector<ll>> w) {
+	int n = sz(w);
+	vector<vi> grp(n); // original vertices merged into i
+	rep(i, 0, n) grp[i] = {i};
+	vi id(n); iota(all(id), 0); // alive vertices
+	ll best = LLONG_MAX; vi bestSet;
+	while (sz(id) > 1) {
+		int k = sz(id), prev = -1, last = -1;
+		vector<ll> d(k); vector<char> in(k);
+		rep(step, 0, k) {
+			int sel = -1;
+			rep(i, 0, k) if (!in[i] && (sel < 0 || d[i] > d[sel]))
+				sel = i;
+			in[sel] = 1; prev = last; last = sel;
+			rep(i, 0, k) if (!in[i]) d[i] += w[id[sel]][id[i]];
+		}
+		if (d[last] < best)
+			best = d[last], bestSet = grp[id[last]];
+		int a = id[prev], b = id[last]; // merge b into a
+		rep(i, 0, k) {
+			w[a][id[i]] += w[b][id[i]];
+			w[id[i]][a] = w[a][id[i]];
+		}
+		grp[a].insert(grp[a].end(), all(grp[b]));
+		id.erase(id.begin() + last);
+	}
+	return {best, bestSet};
 }

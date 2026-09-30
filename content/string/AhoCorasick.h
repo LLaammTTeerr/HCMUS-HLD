@@ -1,47 +1,43 @@
+/**
+ * Author: HCMUS-HLD
+ * Description: Aho-Corasick over alphabet [A, A+K).
+ * insert() all patterns, then build(); count(s) = total
+ * number of pattern occurrences in s. After build, cnt[v] =
+ * patterns that are suffixes of node v, nxt is the full
+ * automaton, link the suffix link.
+ * Time: O(K \cdot \sum |P|) build, O(|s|) count.
+ */
 #pragma once
 
 namespace AhoCorasick {
-    struct TrieNode {
-        int nxt[NUM_CHAR], link, term;
-    };
-    
-    vector<TrieNode> Trie;
-    
-    void insertString(const string &str) {
-        int pt(0);
-        for (char ch : str) {
-            int c(ch - '0');
-            if(!Trie[pt].nxt[c]) {
-                Trie[pt].nxt[c] = Trie.size();
-                Trie.emplace_back();
-            }
-            pt = Trie[pt].nxt[c];
-        }
-        Trie[pt].term = pt;
-    }
-    
-    void buildAutomaton(void) {
-        Trie.emplace_back();
-        for (int i = 1; i <= nArr; ++i) insertString(str[i]);
-        queue<int> qu; qu.push(0);
-        while(qu.size()) {
-            int v(qu.front()), u(Trie[v].link); qu.pop();
-            if(!Trie[v].term) Trie[v].term = Trie[u].term;
-            for (int c = 0; c < NUM_CHAR; ++c) {
-                if(Trie[v].nxt[c]) {
-                    Trie[Trie[v].nxt[c]].link = (v) ? Trie[u].nxt[c] : 0;
-                    qu.push(Trie[v].nxt[c]);
-                } else Trie[v].nxt[c] = Trie[u].nxt[c];
-            }
-        }
-    }
-
-    void query(const string &str) {
-        int pt(0);
-        for (char ch : str) {
-            int c(ch - '0');
-            while(pt > 0 && !Trie[pt].nxt[c]) pt = Trie[pt].link;
-            pt = Trie[pt].nxt[c];
-        }
-    }
+	const int K = 26; const char A = 'a';
+	struct Node { int nxt[K] = {}, link = 0; ll cnt = 0; };
+	vector<Node> T(1);
+	int insert(const string &s) {
+		int v = 0;
+		for (char ch : s) {
+			int c = ch - A;
+			if (!T[v].nxt[c])
+				T[v].nxt[c] = sz(T), T.emplace_back();
+			v = T[v].nxt[c];
+		}
+		T[v].cnt++; return v;
+	}
+	void build() {
+		queue<int> q; q.push(0);
+		while (sz(q)) {
+			int v = q.front(), u = T[v].link; q.pop();
+			if (v) T[v].cnt += T[u].cnt;
+			rep(c,0,K) {
+				int &w = T[v].nxt[c];
+				if (w) T[w].link = v ? T[u].nxt[c] : 0, q.push(w);
+				else w = T[u].nxt[c];
+			}
+		}
+	}
+	ll count(const string &s) {
+		int v = 0; ll r = 0;
+		for (char ch : s) v = T[v].nxt[ch - A], r += T[v].cnt;
+		return r;
+	}
 }

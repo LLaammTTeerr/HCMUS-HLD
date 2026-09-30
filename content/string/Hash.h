@@ -1,51 +1,48 @@
+/**
+ * Author: HCMUS-HLD
+ * Description: Polynomial hash as a value type. HV = hash of a
+ * sequence plus its length; a + b is the hash of the concatenation
+ * (associative, identity HV()), so HV works in segment trees for
+ * dynamic strings. H h(s): h.get(l, r) = hash of s[l, r), comparable
+ * across different strings. Call initHash() once. Elements must be
+ * in $[0, MD)$; lengths $< $ MAXL.
+ * Usage: initHash(); H a(s), b(t);
+ * a.get(0, 3) + b.get(2, 4) == a.get(5, 9)
+ * Time: O(N) build, O(NMOD) per get / +
+ */
 #pragma once
 
-const int MOD[] = {(int) 1e9 + 2277, (int) 1e9 + 5277, (int) 1e9 + 8277, (int) 1e9 + 9277};
-const int BASE = 256;
+const int NMOD = 2, BASE = 131, MAXL = 1e6 + 5;
+const ll MD[] = {(ll)1e9 + 2277, (ll)1e9 + 5277};
+array<ll, NMOD> pw[MAXL];
+void initHash() {
+	rep(j,0,NMOD) pw[0][j] = 1;
+	rep(i,1,MAXL) rep(j,0,NMOD) pw[i][j] = pw[i-1][j] * BASE % MD[j];
+}
 
-struct Hash {
-    ll value[NMOD];
-
-    Hash(char c = 0) {
-        for (int i = 0; i < NMOD; ++i) value[i] = c;
-    }
-
-    Hash operator + (const Hash &x) const {
-        Hash res;
-        for (int j = 0; j < NMOD; ++j) {
-            res.value[j] = value[j] + x.value[j];
-            if(res.value[j] >= MOD[j]) res.value[j] -= MOD[j];
-        }
-        return res;
-    }
-
-    Hash operator - (const Hash &x) const {
-        Hash res;
-        for (int j = 0; j < NMOD; ++j) {
-            res.value[j] = value[j] - x.value[j];
-            if(res.value[j] < 0) res.value[j] += MOD[j];
-        }
-        return res;
-    }
-
-    Hash operator * (int k) const {
-        Hash res;
-        for (int j = 0; j < NMOD; ++j) res.value[j] = value[j] * pw[j][k] % MOD[j];
-        return res;
-    }
-
-    bool operator == (const Hash &x) const {
-        for (int j = 0; j < NMOD; ++j) if(value[j] != x.value[j]) return false;
-        return true;
-    }
-
+struct HV {
+	array<ll, NMOD> v{}; int len = 0;
+	HV() {}
+	HV(ll c) : len(1) { rep(j,0,NMOD) v[j] = c; }
+	HV operator+(const HV& b) const { // concatenation
+		HV r; r.len = len + b.len;
+		rep(j,0,NMOD) r.v[j] = (v[j] * pw[b.len][j] + b.v[j]) % MD[j];
+		return r;
+	}
+	bool operator==(const HV& b) const {
+		return len == b.len && v == b.v;
+	}
 };
 
-Hash getHash(int l, int r) { return (hashVal[r] - hashVal[l - 1]) * (n - r); }
-
-void prepare() {
-    for (int j = 0; j < NMOD; ++j) {
-        pw[j][0] = 1;
-        for (int i = 1; i <= n; ++i) pw[j][i] = pw[j][i - 1] * BASE % MOD[j];
-    }
-}
+struct H {
+	vector<HV> h;
+	H(const string& s) : h(sz(s) + 1) {
+		rep(i,0,sz(s)) h[i+1] = h[i] + HV((unsigned char)s[i]);
+	}
+	HV get(int l, int r) { // [l, r)
+		HV res; res.len = r - l;
+		rep(j,0,NMOD) res.v[j] = ((h[r].v[j] - h[l].v[j] *
+			pw[r-l][j]) % MD[j] + MD[j]) % MD[j];
+		return res;
+	}
+};

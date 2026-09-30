@@ -7,16 +7,19 @@
  * $2n$ terms of the recurrence.
  * Useful for guessing linear recurrences after brute-forcing the first terms.
  * Should work on any field, but numerical stability for floats is not guaranteed.
- * Output will have size $\le n$.
+ * Output will have size $\le n$. Needs prime const ll mod and
+ * modpow(b, e) (ModPow.h, not printed).
  * Usage: berlekampMassey({0, 1, 1, 3, 5, 11}) // {1, 2}
  * Time: O(N^2)
  * Status: bruteforce-tested mod 5 for n <= 5 and all s
  */
 #pragma once
 
+#include "ModPow.h"
+
 vector<ll> berlekampMassey(vector<ll> s) {
 	int n = sz(s), L = 0, m = 0;
-	vector<ll> C(n), B(n), T;
+	vector<ll> C(n + 1), B(n + 1), T;
 	C[0] = B[0] = 1;
 
 	ll b = 1;
