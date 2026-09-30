@@ -2,7 +2,7 @@
  * Author: HCMUS-HLD
  * Description: Given $p[i] = f(i)$ for $i \in [0, n)$ with $\deg f < n$,
  * returns $f(x)$ for any integer x (negative or huge OK). Z is a
- * modular type (e.g. MInt<P> from ModInt.h) with prime $P > n$.
+ * mod-$P$ int type (Z(ll) reducing negatives, + - * / +=), prime $P > n$.
  * Usage: lagrange<Z>(p, x)
  * Time: O(n \log P)
  */

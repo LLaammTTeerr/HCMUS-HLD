@@ -4,7 +4,7 @@
  * (the $B^+$ convention; negate B[1] for $B^-$), and
  * powerSum $= \sum_{i=1}^{n} i^k = \frac{1}{k+1} \sum_{j=0}^{k}
  * \binom{k+1}{j} B_j n^{k+1-j}$. Z is a modular type
- * (MInt<P> from ModInt.h) with prime $P > K + 1$.
+ * mod-$P$ int (Z(ll), + - * / +=), prime $P > K + 1$.
  * Usage: auto B = bernoulli<Z>(K); Z s = powerSum(n, k, B); // k<=K
  * Time: O(K^2) for bernoulli, O(k \log P) for powerSum
  */
