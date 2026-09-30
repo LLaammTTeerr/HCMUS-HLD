@@ -15,7 +15,7 @@ help:
 	@echo "	make help		- to show this information"
 	@echo "	make showexcluded	- to show files that are not included in the doc"
 	@echo ""
-	@echo "For more information see the file 'doc/README'"
+	@echo "For more information see README.md"
 
 fast: | build
 	$(LATEXCMD) content/hcmus.tex </dev/null
