@@ -1,3 +1,11 @@
+/**
+ * Author: HCMUS-HLD
+ * Description: Euler walk (Hierholzer). Undirected: add edge id to
+ * both endpoints; directed: only to adj[from]. Start at an odd
+ * vertex (directed: out - in = 1) if any. No existence check: the
+ * walk is valid iff its size is m + 1. Recursion depth up to m.
+ * Time: $O(V + E)$
+ */
 #pragma once
 struct Edge {
 	int target, id;
@@ -25,11 +33,12 @@ list<int> euler_walk(int u) {
 		ans.push_back(u);
 	}
 
-	for (auto it = ++ans.begin(); it != ans.end(); ++it) {
-		auto t = euler_walk(*it);
-		t.pop_back();
-		ans.splice(it, t);
-	}
+	for (auto it = ans.begin(); it != ans.end(); ++it)
+		if (!adj[*it].empty()) {
+			auto t = euler_walk(*it);
+			t.pop_back();
+			ans.splice(it, t);
+		}
 
 	return ans;
 }

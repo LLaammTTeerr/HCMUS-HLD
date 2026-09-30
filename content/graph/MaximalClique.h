@@ -1,3 +1,10 @@
+/**
+ * Author: HCMUS-HLD
+ * Description: Maximum clique size via Bron-Kerbosch, n <= 62.
+ * g[i][j] is the 1-indexed adjacency matrix. For max independent
+ * set, run on the complement graph.
+ * Time: $O(3^{n/3})$
+ */
 #pragma once
 
 int g[N][N];
@@ -5,7 +12,7 @@ int res;
 ll edges[N];
 
 void BronKerbosch(int n, ll R, ll P, ll X) { // O(3 ^ (n / 3))
-	// here we will find all possible maximal cliques (not maximum) i.e. there is no node which can be included in this set
+	// each leaf is a maximal clique R
 	if (P == 0ll && X == 0ll) { 
 		int t = __builtin_popcountll(R);
 		res = max(res, t);

@@ -1,13 +1,19 @@
 /**
+ * Author: HCMUS-HLD
+ * Description: Min cost perfect matching on an $n \times n$ cost
+ * matrix, 1-indexed. Negative costs OK. Rectangular: pad with 0
+ * rows/cols. Max cost: negate. Missing edges default to 1e18.
+ * matchX[i] = column of row i. hungarian() returns the total cost.
  * Time: $O(N^3)$
-*/
+ */
 
 #pragma once
 
 struct Hungarian {
-	vector<vector<int>> c; // matrix cost
-	vector<int> fx, fy, matchX, matchY; // potentials | corresponding node
-	vector<int> trace, dist, arg; // last vertex on the left side | distance from the tree | the corresponding node
+	vector<vector<ll>> c; // matrix cost
+	vector<ll> fx, fy, dist;
+	vi matchX, matchY; // potentials | corresponding node
+	vi trace, arg; // prev left vertex | argmin of dist
 	queue<int> qu; // used for bfs
 
 	int numNode; // assume that |L| = |R| = n
@@ -16,12 +22,13 @@ struct Hungarian {
 
 	Hungarian(int _n) {
 		numNode = _n;
-		c = vector<vector<int>>(numNode + 1, vector<int>(numNode + 1, 1e9+7));
-		fx = fy = matchX = matchY = trace = dist = arg = vector<int>(numNode + 1);
+		c.assign(numNode + 1, vector<ll>(numNode + 1, 1e18));
+		fx = fy = dist = vector<ll>(numNode + 1);
+		matchX = matchY = trace = arg = vi(numNode + 1);
 	}
 
-	inline void addEdge(int u, int v, int _cost) { c[u][v] = min(c[u][v], _cost); }
-	inline int cost(int u, int v) const { return c[u][v] - fx[u] - fy[v]; }
+	inline void addEdge(int u, int v, ll _cost) { c[u][v] = min(c[u][v], _cost); }
+	inline ll cost(int u, int v) const { return c[u][v] - fx[u] - fy[v]; }
 
 	void initBFS(int root) {
 		start = root;
@@ -37,7 +44,7 @@ struct Hungarian {
 			int u(qu.front()); qu.pop();
 			for (int v = 1; v <= numNode; ++v) {
 				if(trace[v]) continue;
-				int w = cost(u, v);
+				ll w = cost(u, v);
 				if(w == 0) {
 					trace[v] = u;
 					if(!matchY[v]) return v;
@@ -57,7 +64,7 @@ struct Hungarian {
 	}
 
 	void update(void) {
-		int delta = 1e9+7;
+		ll delta = LLONG_MAX;
 		for (int i = 1; i <= numNode; ++i) if(!trace[i]) delta = min(delta, dist[i]);
 		fx[start] += delta;
 		for (int i = 1; i <= numNode; ++i) {
@@ -74,7 +81,9 @@ struct Hungarian {
 		}
 	}
 
-	void hungarian(void) {
+	ll hungarian(void) {
+		for (int i = 1; i <= numNode; ++i)
+			fx[i] = *min_element(c[i].begin() + 1, c[i].end());
 		for (int i = 1; i <= numNode; ++i) {
 			initBFS(i);
 			do {
@@ -83,12 +92,8 @@ struct Hungarian {
 			} while(!finish);
 			enlarge();
 		}
-	}
-
-	void show() {
-		int ans = 0;
-		for (int i = 1; i <= numNode; ++i) if(matchX[i]) ans += c[i][matchX[i]];
-		cout << ans << '\n';
-		for (int i = 1; i <= numNode; ++i) cout << i << ' ' << matchX[i] << '\n';
+		ll ans = 0;
+		for (int i = 1; i <= numNode; ++i) ans += c[i][matchX[i]];
+		return ans;
 	}
 };

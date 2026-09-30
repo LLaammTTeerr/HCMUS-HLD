@@ -1,14 +1,17 @@
 /**
- * Time: $O(N \times \sqrt(N))$ 
-*/
+ * Author: HCMUS-HLD
+ * Description: Hopcroft-Karp bipartite matching. Left 1..m, right
+ * 1..n. After solve(): cntMatching, matx[u] = right partner or 0.
+ * Time: $O(E\sqrt V)$
+ */
 #pragma once
 
-struct GraphMatching {
+struct HopcroftKarp {
 	vector<vector<int>> adj;
 	vector<int> dist, matx, maty;
 	int mNode, nNode, cntMatching;
 
-	GraphMatching(int _m, int _n) {
+	HopcroftKarp(int _m, int _n) {
 		mNode = _m, nNode = _n;
 		adj = vector<vector<int>>(mNode + 1, vector<int>());
 		dist = matx = vector<int>(mNode + 1);

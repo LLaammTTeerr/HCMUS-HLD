@@ -1,6 +1,9 @@
 /**
- * Usage: 
- *  add_disjunction(u, nu, v, nv) to represent the or and the negate of variable
+ * Author: HCMUS-HLD
+ * Description: 2-SAT via Kosaraju. Variables are 1..n (index 0 is
+ * ignored). add\_disjunction(u, nu, v, nv) adds clause
+ * (u xor nu) or (v xor nv), i.e. nu = 1 negates u.
+ * Time: $O(n + m)$
  */
 
 #pragma once
