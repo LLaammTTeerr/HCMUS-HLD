@@ -16,7 +16,7 @@ void fft(vector<C> &a) {
 	for (int i = 0; i < n; ++i) if(i < rev[i]) swap(a[i], a[rev[i]]);
 	for (int k = 1; k < n; k <<= 1) {
 		for (int i = 0; i < n; i += k << 1) {
-            for (int j = 0; j < k; ++j) {
+			for (int j = 0; j < k; ++j) {
 				auto x = (double*) &rt[j + k], y = (double*) &a[i + j + k];
 				C z(x[0] * y[0] - x[1] * y[1], x[0] * y[1] + x[1] * y[0]);
 				a[i + j + k] = a[i + j] - z; a[i + j] += z;
@@ -49,8 +49,8 @@ template<ll MOD> vector<ll> convMod(const vector<ll> &a, const vector<ll> &b) {
 }
 
 void mul(int a[], int b[], ll c[]) {
-    vector<ll> pa, pb;
-    for (int i = 0; i < k; ++i) pa.push_back(a[i]), pb.push_back(b[i]);
-    vector<ll> res = convMod<MOD>(pa, pb);
-    for (int i = 0; i < sz(res); ++i) c[i] = res[i];
+	vector<ll> pa, pb;
+	for (int i = 0; i < k; ++i) pa.push_back(a[i]), pb.push_back(b[i]);
+	vector<ll> res = convMod<MOD>(pa, pb);
+	for (int i = 0; i < sz(res); ++i) c[i] = res[i];
 }

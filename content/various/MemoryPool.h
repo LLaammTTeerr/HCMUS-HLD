@@ -10,8 +10,8 @@ public:
   MemoryPool(void): resource(buffer.data(), buffer.size()), allocator(&resource) {}
 
   T *allocate(const T& val = T()) {
-    T *p = allocator.allocate(1);
-    allocator.construct(p, val);
-    return p;
+	T *p = allocator.allocate(1);
+	allocator.construct(p, val);
+	return p;
   }
 };

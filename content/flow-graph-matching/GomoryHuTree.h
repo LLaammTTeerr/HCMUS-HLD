@@ -7,15 +7,15 @@
 */
 
 vector<array<ll, 3>> gomoryHu(int n, const vector<array<ll, 3>>& edges) {
-    vector<int> par(n, 0); vector<ll> wt(n, 0);
-    for (int i = 1; i < n; i++) {
-        Dinic D(n);
-        for (auto [u, v, c] : edges) D.addEdge(u, v, c, c);
-        wt[i] = D.maxflow(i, par[i]);
-        vector<char> side = D.minCutSide(i);
-        for (int j = i + 1; j < n; j++) if (side[j] && par[j] == par[i]) par[j] = i;
-    }
-    vector<array<ll, 3>> tree;
-    for (int i = 1; i < n; i++) tree.push_back({i, par[i], wt[i]});
-    return tree;
+	vector<int> par(n, 0); vector<ll> wt(n, 0);
+	for (int i = 1; i < n; i++) {
+		Dinic D(n);
+		for (auto [u, v, c] : edges) D.addEdge(u, v, c, c);
+		wt[i] = D.maxflow(i, par[i]);
+		vector<char> side = D.minCutSide(i);
+		for (int j = i + 1; j < n; j++) if (side[j] && par[j] == par[i]) par[j] = i;
+	}
+	vector<array<ll, 3>> tree;
+	for (int i = 1; i < n; i++) tree.push_back({i, par[i], wt[i]});
+	return tree;
 }

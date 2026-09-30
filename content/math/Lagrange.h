@@ -1,6 +1,6 @@
 Z lagrange(const std::vector <Z> &p, int x) {
   if (x < (int) p.size())
-    return p[x];
+	return p[x];
 	Z ans = 0, prod = 1;
  
 	for (int i = 1; i < (int) p.size(); i++) {
