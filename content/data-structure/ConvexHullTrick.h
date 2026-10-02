@@ -1,48 +1,38 @@
+/**
+ * Author: HCMUS-HLD
+ * Description: Monotone convex hull trick for MAXIMUM. Lines
+ * y = kx + m must be added with non-decreasing k (equal k is
+ * fine); query at any x. For minimum, add (-k, -m) in
+ * non-increasing k and negate the answer. Faster than
+ * DynamicHull when slopes come sorted.
+ * Time: O(1) amortized add, O(\log N) query.
+ */
 #pragma once
 
-using i64 = int64_t;
+struct MonoHull {
+	struct L { ll k, m, p; }; // p: first x where L is best
+	vector<L> h;
 
-const int inf = 1e9 + 7;
-
-i64 ceil_div(i64 a, i64 b) {
-	if (b < 0)
-		return ceil_div(-a, -b);
-	return a < 0 ? a / b : (a + b - 1) / b;
-}
-
-class ConvexHullMax {
-private:
-	struct Line {
-		i64 x, a, b;
-
-		Line(i64 _x = -inf, i64 _a = -inf, i64 _b = -inf) : x(_x), a(_a), b(_b) {}
-
-		inline i64 operator () (i64 x) const {
-			return a * x + b;
+	void add(ll k, ll m) {
+		assert(h.empty() || h.back().k <= k);
+		if (sz(h) && h.back().k == k) {
+			if (h.back().m >= m) return;
+			h.pop_back();
 		}
-
-		inline i64 operator ^ (const Line& other) const {
-			return ceil_div(other.b - b, a - other.a);
+		ll p = LLONG_MIN;
+		while (sz(h)) { // ceil((m' - m) / (k - k')), k > k'
+			ll a = h.back().m - m, b = k - h.back().k;
+			p = a / b + (a % b > 0);
+			if (p > h.back().p) break;
+			h.pop_back(), p = LLONG_MIN;
 		}
-
-		inline bool operator < (const Line& other) const {
-			return x < other.x;
-		}
-	};
-
-	std::vector <Line> q;
-public:
-	void insert(i64 a, i64 b) {
-		Line l(-inf, a, b);
-
-		while (not q.empty() and (q.back() ^ l) < q.back().x)
-			q.pop_back();
-
-		l.x = q.empty() ? -inf : q.back() ^ l;
-		q.push_back(l);
+		h.push_back({k, m, p});
 	}
 
-	i64 query(i64 x) const {
-		return (*std::prev(std::upper_bound(q.begin(), q.end(), Line(x)))) (x);
+	ll query(ll x) {
+		assert(sz(h));
+		auto l = *--partition_point(all(h),
+			[&](const L& l) { return l.p <= x; });
+		return l.k * x + l.m;
 	}
 };
