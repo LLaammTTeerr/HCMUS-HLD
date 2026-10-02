@@ -59,6 +59,10 @@ magic flux $F=b^2+d^2-a^2-c^2$:
  For cyclic quadrilaterals the sum of opposite angles is $180^\circ$,
 $ef = ac + bd$, and $A = \sqrt{(p-a)(p-b)(p-c)(p-d)}$.
 
+\subsection{Pick's theorem}
+Lattice polygon with area $A$, $I$ interior and $B$ boundary lattice points:
+$A = I + \frac{B}{2} - 1$. Edge $(x_1,y_1)$--$(x_2,y_2)$ holds $\gcd(|x_2-x_1|, |y_2-y_1|)$ boundary points, excluding one endpoint.
+
 \subsection{Spherical coordinates}
 \begin{center}
 \includegraphics[width=25mm]{content/math/sphericalCoordinates}
@@ -235,6 +239,23 @@ $$\left(x+\frac{kb}{\gcd(a,b)}, y-\frac{ka}{\gcd(a,b)}\right), \quad k\in\mathbb
 
 
 
+\section{Number theory}
+$n = \prod p_i^{e_i}$. Divisors: $d(n) = \prod (e_i + 1)$, $\sigma(n) = \prod \frac{p_i^{e_i+1} - 1}{p_i - 1}$.
+Max $d(n)$: 1344 for $n \le 10^9$, 103680 for $n \le 10^{18}$.
+
+Totient: $\varphi(n) = n \prod_{p | n} (1 - \frac1p)$, $\sum_{d|n} \varphi(d) = n$.
+Euler: $a^{\varphi(m)} \equiv 1 \pmod m$ if $\gcd(a, m) = 1$. For any $a$ and
+$k \ge \log_2 m$: $a^k \equiv a^{(k \bmod \varphi(m)) + \varphi(m)} \pmod m$.
+
+$\sum_{i=1}^n \gcd(i, n) = \sum_{d|n} d\,\varphi(n/d)$,\quad
+$\sum_{i,j=1}^n [\gcd(i,j)=1] = \sum_d \mu(d) \lfloor n/d \rfloor^2$.
+
+Legendre: $v_p(n!) = \sum_{i \ge 1} \lfloor n / p^i \rfloor = \frac{n - s_p(n)}{p - 1}$, $s_p$ = digit sum in base $p$.
+Kummer: $v_p\binom{n}{m}$ = number of carries when adding $m$ and $n - m$ in base $p$.
+
+Primitive roots exist mod $1, 2, 4, p^k, 2p^k$ ($p$ odd prime), and there are $\varphi(\varphi(m))$ of them.
+$g$ is one iff $g^{\varphi(m)/q} \not\equiv 1$ for every prime $q | \varphi(m)$; the smallest is small, so try $g = 2, 3, \dots$
+
 \kactlimport{InverseModulo.h}
 \kactlimport{CRT.h}
 \kactlimport{DiscreteLog.h}
@@ -244,10 +265,12 @@ $$\left(x+\frac{kb}{\gcd(a,b)}, y-\frac{ka}{\gcd(a,b)}\right), \quad k\in\mathbb
 \kactlimport{BerlekampMassey.h}
 \kactlimport{LinearRecurrence.h}
 \kactlimport{GaussianElimination.h}
+\kactlimport{Determinant.h}
 % \kactlimport{ModInt.h}
 \kactlimport{Lagrange.h}
 \kactlimport{FFTMOD.h}
 \kactlimport{NTTMOD.h}
+\kactlimport{PolySeries.h}
 \kactlimport{FWHT.h}
 \kactlimport{XorBasis.h}
 \kactlimport{BernoulliNumber.h}
