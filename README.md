@@ -23,16 +23,17 @@ The document follows the WF TRD rules, and CI checks the ones it can:
 
 | Chapter | Highlights |
 |---|---|
-| Contest | template, `.bashrc`, `hash.sh` |
-| Mathematics | formulas, NTT/FFT mod, FWHT, Berlekamp–Massey, Gauss, Simplex, Miller–Rabin, Pollard rho |
+| Contest | template, `.bashrc`, `hash.sh`, troubleshooting checklist |
+| Mathematics | formulas, NTT/FFT mod, CRT, discrete log, modular square root, FWHT, Berlekamp–Massey, Gauss, Simplex, Miller–Rabin, Pollard rho |
 | Dynamic Programming | Knuth, slope trick, Aliens trick |
 | Combinatorial | formulas, partition numbers |
 | Flow & Matching | modelling notes, Dinic, min-cost flow, Hopcroft–Karp, Hungarian, blossom, Stoer–Wagner, Gomory–Hu |
 | Data structures | ZKW segment tree, Li Chao, convex hull trick, splay tree, order tree, hash map, generic hash |
-| Graph | 2-SAT, centroid, block-cut tree, bridges/articulation, max clique, Euler tour |
-| String | KMP, Manacher, Aho–Corasick, hashing, suffix arrays, Lyndon |
+| Graph | 2-SAT, Tarjan SCC, centroid, block-cut tree, bridges/articulation, max clique, Euler tour |
+| String | KMP, Z-function, Manacher, Aho–Corasick, hashing, suffix arrays, Lyndon |
 | Geometry | KACTL 2D/3D geometry |
 | Various | BigNum, y-combinator, fast I/O, fast mod, memory pool |
+| Techniques | checklist of algorithm names to scan when stuck |
 
 Files in `content/` that are not printed are commented out in their chapter's `chapter.tex`.
 Run `make showexcluded` to list them.
