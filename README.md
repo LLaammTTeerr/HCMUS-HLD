@@ -24,12 +24,12 @@ The document follows the WF TRD rules, and CI checks the ones it can:
 | Chapter | Highlights |
 |---|---|
 | Contest | template, `.bashrc`, `hash.sh`, troubleshooting checklist |
-| Mathematics | formulas (incl. number theory, Pick), NTT/FFT mod, CRT, discrete log, modular square root, power series inv/log/exp, determinant, FWHT, Berlekamp–Massey, Gauss, Simplex, Miller–Rabin, Pollard rho |
+| Mathematics | formulas (incl. number theory, Pick), NTT/FFT mod, CRT, linear Diophantine, floor sum, discrete log, modular square root, power series inv/log/exp, determinant, FWHT, Berlekamp–Massey, Gauss, Simplex, Miller–Rabin, Pollard rho |
 | Dynamic Programming | Knuth, divide and conquer, slope trick, Aliens trick |
 | Combinatorial | formulas (counting, Kirchhoff, LGV, Sprague–Grundy), useful numbers (perfect, highly composite, primes, NTT primes), partition numbers |
 | Flow & Matching | modelling notes, Dinic, min-cost flow, Hopcroft–Karp, Hungarian, blossom, Stoer–Wagner, Gomory–Hu |
 | Data structures | ZKW segment tree, Li Chao, convex hull trick, splay tree, order tree, hash map, generic hash |
-| Graph | 2-SAT, Tarjan SCC, centroid, block-cut tree, bridges/articulation, max clique, Euler tour |
+| Graph | 2-SAT, Tarjan SCC, dominator tree, centroid, block-cut tree, bridges/articulation, max clique, Euler tour |
 | String | KMP, Z-function, Manacher, Aho–Corasick, hashing, suffix arrays, suffix automaton, Lyndon |
 | Geometry | KACTL 2D/3D geometry, half-plane intersection, Minkowski sum |
 | Various | BigNum, y-combinator, fast I/O, fast mod, memory pool |
