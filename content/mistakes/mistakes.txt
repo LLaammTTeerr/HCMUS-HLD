@@ -28,7 +28,6 @@ map[key] inserts key; use find/count to test
 lower_bound(all(set)) is O(n): use s.lower_bound
 Dijkstra: skip stale pq entries (d > dist[u])
 unordered_map can be hacked: custom hash/HashMap
-Sum of n bounded: size per test, not MAXN each time
 Hash collisions: mod 2^61-1 or two mods
 Geometry: collinear/duplicate points, vertical lines
 Impossible case: print -1/NO as statement says
@@ -38,7 +37,7 @@ Passing vector/string by value in recursion -> TLE/MLE
 s = s + c in a loop is O(n^2), use s += c
 multiset::erase(x) removes all copies: erase(find(x))
 Bit precedence: a & b == c is a & (b == c)
-a * b % M with M > 2^31: needs __int128
+a * b % M with M > 3e9 (M^2 >= 2^63): needs __int128
 double above 2^53 loses integer precision
 Wrong loop variable in nested loops (i vs j, n vs m)
 Ternary search fails on plateaus (non-strict unimodal)
