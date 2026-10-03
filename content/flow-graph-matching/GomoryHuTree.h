@@ -17,7 +17,7 @@ vector<Edge> gomoryHu(int n, const vector<Edge>& ed) {
 		for (auto [u, v, w] : ed) D.addEdge(u, v, w, w);
 		tree.push_back({i, par[i], D.maxFlow(i, par[i])});
 		rep(j, i + 1, n)
-			if (D.leftOfMinCut(j) && par[j] == par[i]) par[j] = i;
+			if (D.dist[j] >= 0 && par[j] == par[i]) par[j] = i;
 	}
 	return tree;
 }

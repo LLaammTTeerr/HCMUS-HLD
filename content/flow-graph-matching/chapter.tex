@@ -29,13 +29,16 @@
 Edge $u\to v$ with bounds $[L,R]$: add $u\to v$ cap $R-L$,
 $u\to T'$ cap $L$, $S'\to v$ cap $L$ ($S',T'$ new). Add $T\to S$
 cap $\infty$. Feasible iff \texttt{maxFlow}$(S',T')=\sum L$. Max
-flow: on the \emph{same} DinicFlow (no reset, keep $T\to S$) the
-value of \texttt{maxFlow}$(S,T)$ is the answer. Min flow: $f$ on
-$T\to S$, remove it, answer $f-$\texttt{maxFlow}$(T,S)$.
+flow: on the \emph{same} DinicFlow (keep $T\to S$) the value of
+\texttt{maxFlow}$(S,T,$\texttt{false}$)$ is the answer. Min flow:
+$f$ on $T\to S$ (edge $i$), remove it (zero \texttt{capa} and
+\texttt{flow} of $i$, $i\oplus1$), answer
+$f-$\texttt{maxFlow}$(T,S,$\texttt{false}$)$.
 Assumes no edges into $S$ or out of $T$. Circulation (no
 $S,T$): only the feasibility step.
 
 \kactlimport{DinicFlow.h}
+\kactlimport{FastDinicFlow.h}
 \kactlimport{MaxFlowMinCost.h}
 % \kactlimport{GraphMatching.h}
 \kactlimport{GraphFastMatching.h}

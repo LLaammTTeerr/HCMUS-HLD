@@ -1,5 +1,5 @@
 #include "../utilities/template.h"
-#include "../../content/flow-graph-matching/DinicFlow.h"
+#include "../../content/flow-graph-matching/FastDinicFlow.h"
 
 mt19937 rng(1);
 int rnd(int a, int b) { return a + (int)(rng() % (b - a + 1)); }
@@ -24,7 +24,7 @@ void testMaxFlow() {
 		int s = rnd(0, n - 1), t = rnd(0, n - 2); if (t >= s) t++;
 		bool und = it % 3 == 0, one = it % 2; // 0- or 1-indexed
 		vector<array<ll, 4>> ed;
-		DinicFlow D(n + one);
+		FastDinicFlow D(n + one);
 		rep(i, 0, m) {
 			int u = rnd(0, n - 1), v = rnd(0, n - 1);
 			ll w = it % 5 == 0 ? rnd(0, 1 << 30) * 1000LL : rnd(0, 10);
@@ -34,21 +34,16 @@ void testMaxFlow() {
 		}
 		ll f = D.maxFlow(s + one, t + one);
 		assert(f == bruteCut(n, ed, s, t));
-		// cut side from dist has capacity == flow; minCutSide lists its edges
-		auto side = [&](int v) { return D.dist[v + one] >= 0; };
-		ll c = 0; vector<pii> want;
+		// cut side from leftOfMinCut has capacity == flow
+		ll c = 0;
 		for (auto [u, v, w, rw] : ed) {
-			bool lu = side(int(u)), lv = side(int(v));
-			if (lu && !lv) { c += w; if (w) want.push_back({u + one, v + one}); }
-			if (lv && !lu) { c += rw; if (rw) want.push_back({v + one, u + one}); }
+			bool lu = D.leftOfMinCut(int(u) + one), lv = D.leftOfMinCut(int(v) + one);
+			if (lu && !lv) c += w;
+			if (lv && !lu) c += rw;
 		}
-		assert(side(s) && !side(t));
+		assert(D.leftOfMinCut(s + one) && !D.leftOfMinCut(t + one));
 		assert(c == f);
-		auto got = D.minCutSide(s + one);
-		sort(all(want)), sort(all(got));
-		assert(got == want);
-		assert(D.maxFlow(s + one, t + one, false) == 0); // continues
-		assert(D.maxFlow(s + one, t + one) == f); // resets
+		assert(D.maxFlow(s + one, t + one) == 0); // continues, no reset
 	}
 }
 
@@ -76,7 +71,7 @@ void testLowerBounds() {
 		};
 		go(0);
 		int Sp = n, Tp = n + 1; ll sumL = 0;
-		DinicFlow D(n + 2);
+		FastDinicFlow D(n + 2);
 		for (auto [u, v, L, R] : ed) {
 			D.addEdge(u, v, R - L); D.addEdge(u, Tp, L); D.addEdge(Sp, v, L);
 			sumL += L;
@@ -86,12 +81,11 @@ void testLowerBounds() {
 		assert(ok == (bmin != LLONG_MAX));
 		if (!ok) continue;
 		feas++;
-		DinicFlow D2 = D;
-		assert(D.maxFlow(S, T, false) == bmax); // max flow: continue, keep T->S
-		int id = D2.numEdge - 2; // min flow: remove T->S
-		ll fl = D2.flow[id];
-		D2.capa[id] = D2.capa[id ^ 1] = D2.flow[id] = D2.flow[id ^ 1] = 0;
-		assert(fl - D2.maxFlow(T, S, false) == bmin);
+		FastDinicFlow D2 = D;
+		assert(D.maxFlow(S, T) == bmax); // max flow: continue, keep T->S
+		auto& e = D2.adj[T].back(); // min flow: remove T->S
+		ll fl = e.flow(); e.c = 0; D2.adj[S][e.rev].c = 0;
+		assert(fl - D2.maxFlow(T, S) == bmin);
 	}
 	assert(feas > 1000);
 }
