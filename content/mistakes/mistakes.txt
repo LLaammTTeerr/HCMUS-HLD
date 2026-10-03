@@ -1,0 +1,47 @@
+Most common first:
+Not resetting arrays/globals between test cases
+  (clear only [0, n], memset of MAXN per test -> TLE)
+int overflow: a*b, sums, 1<<40 -> 1LL<<40, ans in ll
+Array size: N+1 for 1-indexed, 2M for undirected edges
+Off-by-one: < vs <=, 0- vs 1-indexed, inclusive ranges
+INF too small (1e9 vs ll sums) or INF+INF overflows
+Negative mod: (x % M + M) % M; mod after every - and *
+Uninitialized locals, missing return in non-void func
+Input: multitest loop, N/M order, read all of input
+Output: YES/Yes, spaces/newlines, setprecision, -0.0
+Edge cases: n=0/1, all equal, empty string, one node
+Graph: disconnected, self-loops, multi-edges, directed?
+endl with big output -> '\n', missing fast IO
+memset only works for 0, -1 (or 0x3f for INF)
+Recursion too deep -> stack overflow, go iterative
+Big local array (int a[1e6] in func) -> stack overflow
+Comparator must be strict: <= in sort can crash
+erase while iterating invalidates iterators
+v.size() - 1 on empty v is huge (unsigned), use sz()
+Division rounds toward 0: -7/2 = -3, use floor div
+pow()/sqrt() for integers rounds: own power, fix isqrt
+Floats: compare with eps, clamp before acos/sqrt
+1<<k for k >= 31, popcount vs popcountll on ll
+Binary search: wrong bounds, mid=(l+r)/2 infinite loop
+Shadowed variables (local n hides global n)
+map[key] inserts key; use find/count to test
+lower_bound(all(set)) is O(n): use s.lower_bound
+Dijkstra: skip stale pq entries (d > dist[u])
+unordered_map can be hacked: custom hash/HashMap
+Sum of n bounded: size per test, not MAXN each time
+Hash collisions: mod 2^61-1 or two mods
+Geometry: collinear/duplicate points, vertical lines
+Impossible case: print -1/NO as statement says
+Constraints: "distinct", "modulo", 0 allowed?
+Multitest with early break/return: rest of input unread
+Passing vector/string by value in recursion -> TLE/MLE
+s = s + c in a loop is O(n^2), use s += c
+multiset::erase(x) removes all copies: erase(find(x))
+Bit precedence: a & b == c is a & (b == c)
+a * b % M with M > 2^31: needs __int128
+double above 2^53 loses integer precision
+Wrong loop variable in nested loops (i vs j, n vs m)
+Ternary search fails on plateaus (non-strict unimodal)
+rand() max is 32767 on Windows: use mt19937
+Interactive: flush after every output
+Debug output or wrong file/problem submitted
