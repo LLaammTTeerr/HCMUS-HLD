@@ -7,8 +7,8 @@ ICPC team reference document (TRD) of team HCMUS-HLD-V3.11Pro-258B,
 VNUHCM University of Science. Copy-pasteable C++ for ICPC-style contests,
 built on the [KACTL](https://github.com/kth-competitive-programming/kactl) template.
 
-**[Download the latest PDF](https://github.com/LLaammTTeerr/HCMUS-HLD/releases/latest/download/hcmus.pdf)**
-(built and released automatically from `main`).
+**[Download the latest PDF](https://github.com/LLaammTTeerr/HCMUS-HLD/releases/latest)**
+(`hcmus-vX.Y.Z.pdf`, built and released automatically from `main`).
 
 ## ICPC World Finals rules
 
@@ -85,7 +85,7 @@ After typing a block at the contest, run `sh hash.sh < file.cpp` to check it mat
 
 - **test**: `make test-compiles` and `make test`.
 - **pdf**: builds the PDF, checks `hash.sh` works and the page count is at most 25, and attaches the PDF to the run as the `hcmus-pdf` artifact.
-- **release**: runs on `main` only, after both pass. It creates a GitHub Release with `hcmus.pdf` attached.
+- **release**: runs on `main` only, after both pass. It creates a GitHub Release with the PDF attached as `hcmus-vX.Y.Z.pdf`.
   The version is the latest `v*` tag plus a patch bump.
   Write `#minor` or `#major` in the commit message to bump those instead.
 
