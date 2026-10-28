@@ -2,6 +2,8 @@
  * Author: HCMUS-HLD
  * Description: Hopcroft-Karp bipartite matching. Left 1..m, right
  * 1..n. After solve(): cntMatching, matx[u] = right partner or 0.
+ * minVertexCover() (Konig, after solve()): (coverL, coverR) flags;
+ * the complement is a maximum independent set.
  * Time: $O(E\sqrt V)$
  */
 #pragma once
@@ -55,20 +57,15 @@ struct HopcroftKarp {
 		while(bfs()) for (int i = 1; i <= mNode; ++i) if(!matx[i]) cntMatching += dfs(i);
 	}
 
-	// Konig, after solve(): (coverL, coverR) = minimum vertex cover;
-	// the complement is the largest independent set.
 	pair<vector<int>, vector<int>> minVertexCover() {
-		vector<int> visL(mNode + 1), visR(nNode + 1);
+		vector<int> L(mNode + 1), R(nNode + 1);
 		function<void(int)> go = [&](int u) {
-			visL[u] = 1;
-			for (int v : adj[u]) if(!visR[v]) {
-				visR[v] = 1;
-				if(maty[v] && !visL[maty[v]]) go(maty[v]);
-			}
+			L[u] = 1;
+			for (int v : adj[u]) if(!R[v]) R[v] = 1, go(maty[v]);
 		};
 		for (int u = 1; u <= mNode; ++u) if(!matx[u]) go(u);
-		for (int u = 1; u <= mNode; ++u) visL[u] = !visL[u];
-		return {visL, visR};
+		for (int u = 1; u <= mNode; ++u) L[u] ^= 1;
+		return {L, R};
 	}
 
 	void show(void) {
