@@ -30,6 +30,10 @@ int main() {
 			usedR[v] = 1;
 		}
 		assert(cnt == best);
+		auto [cL, cR] = H.minVertexCover();
+		assert(sz(cL) == L + 1 && sz(cR) == R + 1 && !cL[0] && !cR[0]);
+		assert(accumulate(all(cL), 0) + accumulate(all(cR), 0) == best);
+		rep(u, 1, L + 1) for (int v : adj[u]) assert(cL[u] || cR[v]);
 	}
 	// larger smoke test
 	int n = 20000; HopcroftKarp H(n, n);
